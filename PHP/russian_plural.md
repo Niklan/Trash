@@ -1,4 +1,8 @@
-<?php
+# Russian Plural.
+
+This is plural function for Russian words.
+
+~~~php
 /**
  * Plural function for Russian words.
  */
@@ -28,6 +32,11 @@ function russian_plural($number, $endingArray) {
   return $ending;
 }
 
+~~~
+
+## Example
+
+~~~php
 /**
  * @example
  */
@@ -39,4 +48,5 @@ $endings = [
 print '1 ' . russian_plural(1, $endings); // 1 яблоко
 print '2 ' . russian_plural(2, $endings); // 2 яблока
 print '5 ' . russian_plural(5, $endings); // 5 яблок
+~~~
 
