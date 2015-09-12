@@ -7,7 +7,7 @@ This is plural function for Russian words.
  * Plural function for Russian words.
  */
 function russian_plural($number, $endingArray) {
-  $number = $number % 100;
+  $number = abs($number) % 100;
   if ($number >= 11 && $number <= 19) {
     $ending = $endingArray[2];
   }
