@@ -49,4 +49,4 @@ region--footer.tpl.php
 
 Result
 
-[Result](http://i.imgur.com/VkGjIYA.png)
+![Result](http://i.imgur.com/VkGjIYA.png)
