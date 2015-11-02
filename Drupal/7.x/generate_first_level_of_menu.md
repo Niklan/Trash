@@ -22,7 +22,7 @@ function THEMENAME_preprocess_region(&$variables) {
     $tree = menu_tree_page_data('main-menu', 1);
     $menu_data = menu_tree_output($tree);
     // Add $menu variable to our region template.
-    $variables['menu'] = drupal_render($menu_tree_data);
+    $variables['menu'] = drupal_render($menu_data);
   }
 }
 
