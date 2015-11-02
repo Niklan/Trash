@@ -5,7 +5,6 @@ This code generates only the first menu level. Conveniently, for example for out
 ```php
 $tree = menu_tree_page_data('main-menu', 1);
 $menu_data = menu_tree_output($tree);
-$variables['menu'] = drupal_render($menu_data);
 ```
 
 
