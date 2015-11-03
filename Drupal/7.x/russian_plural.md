@@ -1,4 +1,4 @@
- # Russian plural
+# Russian plural
 
 ```php
 format_plural($count, '@count photo', '@count photos');
