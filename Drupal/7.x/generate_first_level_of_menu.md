@@ -3,8 +3,8 @@
 This code generates only the first menu level. Conveniently, for example for output to a footer.
 
 ```php
-$menu_tree_data = menu_tree('main-menu');
-$menu = drupal_render($menu_tree_data);
+$tree = menu_tree_page_data('main-menu', 1);
+$menu_data = menu_tree_output($tree);
 ```
 
 
@@ -19,9 +19,10 @@ template.php file of theme.
  */
 function THEMENAME_preprocess_region(&$variables) {
   if ($variables['elements']['#region'] == 'footer') {
-    $menu_tree_data = menu_tree('main-menu');
+    $tree = menu_tree_page_data('main-menu', 1);
+    $menu_data = menu_tree_output($tree);
     // Add $menu variable to our region template.
-    $variables['menu'] = drupal_render($menu_tree_data);
+    $variables['menu'] = drupal_render($menu_data);
   }
 }
 
@@ -49,4 +50,4 @@ region--footer.tpl.php
 
 Result
 
-[Result](http://i.imgur.com/VkGjIYA.png)
+![Result](http://i.imgur.com/VkGjIYA.png)
