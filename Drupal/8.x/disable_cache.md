@@ -31,7 +31,13 @@ sudo cp sites/development.services.yml sites/default/development.services.yml
 
 ## Want theming, but twig caches?
 
-Disable it by editing `development.services.yml` file, by setting change parameters to this:
+If you don't have `services.yml`:
+
+~~~bash
+sudo cp sites/default/default.services.yml sites/default/services.yml
+~~~
+
+Disable it by editing `services.yml` file, by setting change parameters to this:
 
 ~~~yml
 parameters:
