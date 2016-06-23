@@ -13,8 +13,6 @@ Drupal.behaviors.ctools_modal_fix_centering = {
         pos_left = Math.max(40, parseInt(win_width / 2 - modal_width / 2)),
         pos_top = Math.max(40, parseInt(win_height / 2 - modal_height / 2));
 
-      console.log(win_height);
-      console.log(modal_height);
       modal.css({
         'left': pos_left,
         'top': pos_top
