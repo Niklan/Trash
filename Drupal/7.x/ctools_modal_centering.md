@@ -3,7 +3,7 @@
 ~~~javascript
 Drupal.behaviors.ctools_modal_fix_centering = {
   attach: function (context, settings) {
-    var modal = $('#modalContent');
+    var modal = $('#modalContent', context);
 
     function centering() {
       var modal_width = modal.width(),
