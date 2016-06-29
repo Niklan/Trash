@@ -6,7 +6,6 @@ Drupal.behaviors.ctools_modal_fix_centering = {
     var $modal = $('#modalContent');
 
     function centering() {
-      $modal.css({'background': 'red'});
       var modal_width = $modal.width(),
         modal_height = $modal.height(),
         win_width = $(window).width(),
