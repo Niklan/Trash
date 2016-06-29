@@ -3,25 +3,26 @@
 ~~~javascript
 Drupal.behaviors.ctools_modal_fix_centering = {
   attach: function (context, settings) {
-    var modal = $('#modalContent', context);
+    var $modal = $('#modalContent');
 
     function centering() {
-      var modal_width = modal.width(),
-        modal_height = modal.height(),
+      $modal.css({'background': 'red'});
+      var modal_width = $modal.width(),
+        modal_height = $modal.height(),
         win_width = $(window).width(),
         win_height = $(window).height(),
-        pos_left = Math.max(40, parseInt(win_width / 2 - modal_width / 2)),
-        pos_top = Math.max(40, parseInt(win_height / 2 - modal_height / 2));
+        pos_left = parseInt(win_width / 2 - modal_width / 2),
+        pos_top = parseInt(win_height / 2 - modal_height / 2);
 
-      modal.css({
+      $modal.css({
         'left': pos_left,
-        'top': pos_top
+        'top': pos_top < 0 ? 0 : pos_top
       });
       if (win_height < modal_height) {
-        modal.css({'position': 'absolute'});
+        $modal.css({'position': 'absolute'});
       }
       else {
-        modal.css({'position': 'fixed'});
+        $modal.css({'position': 'fixed'});
       }
     }
 
@@ -29,7 +30,7 @@ Drupal.behaviors.ctools_modal_fix_centering = {
     $(window).resize(function () {
       centering();
     });
-    modal.resize(function () {
+    $modal.resize(function () {
       centering();
     });
   }
