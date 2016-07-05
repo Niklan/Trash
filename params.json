@@ -1,0 +1,6 @@
+{
+  "name": "Trash",
+  "tagline": "Just code snippets, tips, tricks, boilerplate and so on for Drupal and PHP, JS, HTML, CSS",
+  "body": "# Trash\r\n\r\nThis is repository for store my own ugly or not code. Just small functions, tips, tricks for PHP, JS, HTML/CSS and ofcourse Drupal.\r\n\r\nI made it, because some task move from project to another and wirte same code again is painful and boring, same as find it backups. \r\n\r\n\r\nBy Nikita Malyshev (Niklan)\r\nhttp://niklan.net (hello@niklan.net)\r\n\r\nAll what you find in this repository under WTFPL license.\r\n",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
