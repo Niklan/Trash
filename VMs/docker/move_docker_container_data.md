@@ -1,6 +1,6 @@
 I have separated kernel and home directory disk partition. Docker use kernel by default, this is not good, cuz it's not enough memory to store this amount of data. The simple way to save docker data on another parition.
 
-# Ubuntu 16.10 or more
+# Ubuntu 16.04 or more
 
 ~~~
 sudo nano /etc/docker/daemon.json
