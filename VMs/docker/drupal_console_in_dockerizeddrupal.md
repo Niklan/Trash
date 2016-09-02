@@ -2,6 +2,7 @@
 
 ```
 docker exec -it PROJECTNAME_php_1 bash -l
+su -l container
 cd /apache/data
 ```
 
