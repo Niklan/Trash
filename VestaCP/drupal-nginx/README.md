@@ -20,3 +20,18 @@ This configs not replace original, it's additional, you easly can delete them if
 You can also put this two files via SFTP and place it to folder from second step.
 
 P.s. I'm just beginner at nginx, so my config may be not full, so you can help me to edit them.
+
+## If you got error
+
+You can get error like this.
+
+```
+line 64: xxd: command not found
+```
+
+Install `vim-common`
+
+```
+yum install vim-common
+```
+
