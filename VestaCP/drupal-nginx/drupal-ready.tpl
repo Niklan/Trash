@@ -80,6 +80,11 @@ server {
             try_files  $uri @drupal;
         }
 
+        ## XML Sitemap support.
+        location = /sitemap.xml {
+            try_files $uri @rewrite;
+        }
+
         location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
             expires max;
             log_not_found off;
