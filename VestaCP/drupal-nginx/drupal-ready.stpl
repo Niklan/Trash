@@ -20,6 +20,7 @@ server {
         allow all;
         log_not_found off;
         access_log off;
+        try_files $uri @drupal;
     }
 
     location = /humans.txt {

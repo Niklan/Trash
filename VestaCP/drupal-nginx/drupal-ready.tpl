@@ -16,6 +16,7 @@ server {
         allow all;
         log_not_found off;
         access_log off;
+        try_files $uri @drupal;
     }
 
     location = /humans.txt {
@@ -32,16 +33,6 @@ server {
     }
 
     location / {
-        # try_files $uri @rewrite; # For Drupal <= 6
-        try_files $uri /index.php?$query_string; # For Drupal >= 7
-
-        ## Replicate the Apache <FilesMatch> directive of Drupal standard
-        ## .htaccess. Disable access to any code files. Return a 404 to curtail
-        ## information disclosure. Hide also the text files.
-        location ~* ^(?:.+\.(?:htaccess|make|txt|engine|inc|info|install|module|profile|po|pot|sh|.*sql|test|theme|tpl(?:\.php)?|xtmpl)|code-style\.pl|/Entries.*|/Repository|/Root|/Tag|/Template)$ {
-            return 404;
-        }
-
         # Very rarely should these ever be accessed outside of your lan
         location ~* \.(txt|log)$ {
             allow 192.168.0.0/16;
@@ -62,7 +53,7 @@ server {
         # Fighting with Styles? This little gem is amazing.
         # location ~ ^/sites/.*/files/imagecache/ { # For Drupal <= 6
         location ~ ^/sites/.*/files/styles/ { # For Drupal >= 7
-            try_files $uri @rewrite;
+            try_files $uri @drupal;
         }
 
         # Handle private files through Drupal.
@@ -70,19 +61,37 @@ server {
             try_files $uri /index.php?$query_string;
         }
 
-        ##Add headers to advagg
-        location ~* files/advagg_(?:css|js)/ {
-            access_log off;
-            expires    max;
-            add_header ETag "";
-            add_header Cache-Control "max-age=290304000, no-transform, public";
-            add_header Last-Modified "Wed, 20 Jan 1988 04:20:42 GMT";
-            try_files  $uri @drupal;
+        ## Advanced Aggregation module CSS
+        ## support. http://drupal.org/project/advagg.
+        location ^~ /sites/default/files/advagg_css/ {
+            expires max;
+            add_header ETag '';
+            add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
+            add_header Accept-Ranges '';
+
+            location ~* /sites/default/files/advagg_css/css[__[:alnum:]]+\.css$ {
+                access_log off;
+                try_files $uri @drupal;
+            }
+        }
+
+        ## Advanced Aggregation module JS
+        ## support. http://drupal.org/project/advagg.
+        location ^~ /sites/default/files/advagg_js/ {
+            expires max;
+            add_header ETag '';
+            add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
+            add_header Accept-Ranges '';
+
+            location ~* /sites/default/files/advagg_js/js[__[:alnum:]]+\.js$ {
+                access_log off;
+                try_files $uri @drupal;
+            }
         }
 
         ## XML Sitemap support.
         location = /sitemap.xml {
-            try_files $uri @rewrite;
+            try_files $uri @drupal;
         }
 
         location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
@@ -92,7 +101,6 @@ server {
 
         ## All static files will be served directly.
         location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|html|xml|otf|ttf|eot|woff2?|svg)$ {
-
             access_log off;
             expires 30d;
             ## No need to bleed constant updates. Send the all shebang in one
@@ -118,9 +126,18 @@ server {
             fastcgi_intercept_errors on;
             include         /etc/nginx/fastcgi_params;
         }
+
+        ## Replicate the Apache <FilesMatch> directive of Drupal standard
+        ## .htaccess. Disable access to any code files. Return a 404 to curtail
+        ## information disclosure. Hide also the text files.
+        location ~* ^(?:.+\.(?:htaccess|make|txt|engine|inc|info|install|module|profile|po|pot|sh|.*sql|test|theme|tpl(?:\.php)?|xtmpl)|code-style\.pl|/Entries.*|/Repository|/Root|/Tag|/Template)$ {
+            return 404;
+        }
+
+        try_files $uri @drupal;
     }
 
-    location @rewrite {
+    location @drupal {
         rewrite ^/(.*)$ /index.php?q=$1;
     }
 
