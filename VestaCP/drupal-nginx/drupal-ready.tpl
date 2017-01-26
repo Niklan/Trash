@@ -7,6 +7,10 @@ server {
     access_log  /var/log/nginx/domains/%domain%.bytes bytes;
     error_log   /var/log/nginx/domains/%domain%.error.log error;
 
+    # Force LetsEncrypt acme challange load before others. Cuz later
+    # all requests with dot will be blocked for security reason.
+    include %home%/%user%/conf/web/nginx.%domain_idn%.conf_letsencrypt*;
+
     location = /favicon.ico {
         log_not_found off;
         access_log off;
@@ -26,7 +30,7 @@ server {
     }
 
     # Block access to "hidden" files and directories whose names begin with a
-    # period. This includes directories used by version control systems such
+    # dot. This includes directories used by version control systems such
     # as Subversion or Git to store control files.
     location ~ (^|/)\. {
         return 403;
@@ -61,8 +65,8 @@ server {
             try_files $uri /index.php?$query_string;
         }
 
-        ## Advanced Aggregation module CSS
-        ## support. http://drupal.org/project/advagg.
+        # Advanced Aggregation module CSS
+        # support. http://drupal.org/project/advagg.
         location ^~ /sites/default/files/advagg_css/ {
             expires max;
             add_header ETag '';
@@ -75,8 +79,8 @@ server {
             }
         }
 
-        ## Advanced Aggregation module JS
-        ## support. http://drupal.org/project/advagg.
+        # Advanced Aggregation module JS
+        # support. http://drupal.org/project/advagg.
         location ^~ /sites/default/files/advagg_js/ {
             expires max;
             add_header ETag '';
@@ -89,7 +93,7 @@ server {
             }
         }
 
-        ## XML Sitemap support.
+        # XML Sitemap support.
         location = /sitemap.xml {
             try_files $uri @drupal;
         }
@@ -99,7 +103,7 @@ server {
             log_not_found off;
         }
 
-        ## All static files will be served directly.
+        # All static files will be served directly.
         location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|html|xml|otf|ttf|eot|woff2?|svg)$ {
             access_log off;
             expires 30d;
@@ -127,9 +131,9 @@ server {
             include         /etc/nginx/fastcgi_params;
         }
 
-        ## Replicate the Apache <FilesMatch> directive of Drupal standard
-        ## .htaccess. Disable access to any code files. Return a 404 to curtail
-        ## information disclosure. Hide also the text files.
+        # Replicate the Apache <FilesMatch> directive of Drupal standard
+        # .htaccess. Disable access to any code files. Return a 404 to curtail
+        # information disclosure. Hide also the text files.
         location ~* ^(?:.+\.(?:htaccess|make|txt|engine|inc|info|install|module|profile|po|pot|sh|.*sql|test|theme|tpl(?:\.php)?|xtmpl)|code-style\.pl|/Entries.*|/Repository|/Root|/Tag|/Template)$ {
             return 404;
         }
