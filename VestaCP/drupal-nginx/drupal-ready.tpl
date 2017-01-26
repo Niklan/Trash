@@ -14,6 +14,16 @@ server {
     location = /favicon.ico {
         log_not_found off;
         access_log off;
+        access_log off;
+        expires 30d;
+        ## No need to bleed constant updates. Send the all shebang in one
+        ## fell swoop.
+        tcp_nodelay off;
+        ## Set the OS file cache.
+        open_file_cache max=3000 inactive=120s;
+        open_file_cache_valid 45s;
+        open_file_cache_min_uses 2;
+        open_file_cache_errors off;
     }
 
     location = /robots.txt {
@@ -27,6 +37,11 @@ server {
         allow all;
         log_not_found off;
         access_log off;
+    }
+
+    # XML Sitemap support.
+    location = /sitemap.xml {
+        try_files $uri @drupal;
     }
 
     # Block access to "hidden" files and directories whose names begin with a
@@ -43,7 +58,7 @@ server {
             deny all;
         }
 
-        ## Trying to access private files directly returns a 404.
+        # Trying to access private files directly returns a 404.
         location ^~ /sites/default/files/private/ {
             internal;
         }
@@ -58,6 +73,16 @@ server {
         # location ~ ^/sites/.*/files/imagecache/ { # For Drupal <= 6
         location ~ ^/sites/.*/files/styles/ { # For Drupal >= 7
             try_files $uri @drupal;
+            access_log off;
+            expires 30d;
+            ## No need to bleed constant updates. Send the all shebang in one
+            ## fell swoop.
+            tcp_nodelay off;
+            ## Set the OS file cache.
+            open_file_cache max=3000 inactive=120s;
+            open_file_cache_valid 45s;
+            open_file_cache_min_uses 2;
+            open_file_cache_errors off;
         }
 
         # Handle private files through Drupal.
@@ -73,7 +98,8 @@ server {
             add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
             add_header Accept-Ranges '';
 
-            location ~* /sites/default/files/advagg_css/css[__[:alnum:]]+\.css$ {
+            location ~* ^/sites/default/files/advagg_css/css[__[:alnum:]]+\.css$ {
+                allow all;
                 access_log off;
                 try_files $uri @drupal;
             }
@@ -87,23 +113,13 @@ server {
             add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
             add_header Accept-Ranges '';
 
-            location ~* /sites/default/files/advagg_js/js[__[:alnum:]]+\.js$ {
+            location ~* ^/sites/default/files/advagg_js/js[__[:alnum:]]+\.js$ {
                 access_log off;
                 try_files $uri @drupal;
             }
         }
 
-        # XML Sitemap support.
-        location = /sitemap.xml {
-            try_files $uri @drupal;
-        }
-
-        location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-            expires max;
-            log_not_found off;
-        }
-
-        # All static files will be served directly.
+        ## All static files will be served directly.
         location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|html|xml|otf|ttf|eot|woff2?|svg)$ {
             access_log off;
             expires 30d;
