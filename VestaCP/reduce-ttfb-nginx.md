@@ -1,6 +1,6 @@
 # Reducre Time To First Bite (TTFB) for Nginx
 
-![http://i.imgur.com/uMUF9ht.png](test)
+![Example TTFB](http://i.imgur.com/uMUF9ht.png)
 
 
 At first, edit `/etc/nginx/nginx.conf`
