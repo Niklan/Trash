@@ -17,7 +17,7 @@ chmod +x s3backups
 
 * Add this file to cron, how often you want to upload backups to Amazon S3. For me, it doing every day at 3PM.
 
-![Cron](http://i.imgur.com/RI4zT6g.png)
+![Cron](http://i.imgur.com/rHbfTjE.png)
 
 This will backup all files in /home/backup which has .tar file extension. This file will be uploaded as 'Reduced Redundancy' files, so their price will be lower.
 
