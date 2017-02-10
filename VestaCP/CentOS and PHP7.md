@@ -26,6 +26,9 @@ yum -y --enablerepo=remi install php71-php php71-php-pear php71-php-bcmath php71
 # Link new php to default binary
 rm -f /usr/bin/php
 ln -s /usr/bin/php71 /usr/bin/php
+# Replace old PHP.ini with new one MAKE BACKUP BEFORE THAT IF YOU DO CHANGES.
+rm -f /etc/php.ini
+ln -s /etc/opt/remi/php71/php.ini /etc/php.ini
 ~~~
 
 Test installation
