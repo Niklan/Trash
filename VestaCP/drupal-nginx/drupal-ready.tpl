@@ -144,6 +144,8 @@ server {
             fastcgi_index   index.php;
             fastcgi_param SCRIPT_FILENAME $request_filename;
             fastcgi_intercept_errors on;
+            fastcgi_buffers 256 4k;
+            fastcgi_read_timeout 14400;
             include         /etc/nginx/fastcgi_params;
         }
 
