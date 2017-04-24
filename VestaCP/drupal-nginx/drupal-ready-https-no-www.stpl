@@ -4,7 +4,7 @@ server {
     ssl                  on;
     ssl_certificate      %ssl_pem%;
     ssl_certificate_key  %ssl_key%;
-    return               302 https://%domain_idn%$request_uri;
+    return               301 https://%domain_idn%$request_uri;
 }
 
 server {

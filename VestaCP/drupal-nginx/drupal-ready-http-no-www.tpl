@@ -1,7 +1,7 @@
 server {
     listen      %ip%:%web_port%;
     server_name %alias_idn%;
-    return      302 http://%domain_idn%$request_uri;
+    return      301 http://%domain_idn%$request_uri;
 }
 
 server {
