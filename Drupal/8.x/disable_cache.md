@@ -57,4 +57,14 @@ drush cr
 
 or manualy go to `/core/rebuild.php`.
 
+# Using DrupalConsole
 
+```bash
+drupal site:mode dev
+```
+
+Revert back
+
+```
+drupal site:mode prod
+```
