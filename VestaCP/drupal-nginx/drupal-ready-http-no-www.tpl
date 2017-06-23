@@ -69,15 +69,19 @@ server {
             internal;
         }
 
+        # For configuration storage.
+        location ^~ /sites/configurations/ {
+            internal;
+        }
+
         # Don't allow direct access to PHP files in the vendor directory.
         location ~ /vendor/.*\.php$ {
             deny all;
             return 404;
         }
 
-        # Fighting with Styles? This little gem is amazing.
-        # location ~ ^/sites/.*/files/imagecache/ { # For Drupal <= 6
-        location ~ ^/sites/.*/files/styles/ { # For Drupal >= 7
+        # Fix for image style generation.
+        location ~ ^/sites/.*/files/styles/ {
             try_files $uri @drupal;
             access_log off;
             expires 30d;
@@ -150,8 +154,8 @@ server {
             fastcgi_index   index.php;
             fastcgi_param SCRIPT_FILENAME $request_filename;
             fastcgi_intercept_errors on;
-            fastcgi_buffers 256 4k;
-            fastcgi_read_timeout 14400;
+            fastcgi_buffer_size 32k;
+            fastcgi_buffers 4 32k;
             include         /etc/nginx/fastcgi_params;
         }
 
@@ -166,7 +170,7 @@ server {
     }
 
     location @drupal {
-        rewrite ^/(.*)$ /index.php?q=$1;
+        rewrite ^/(.*)$ /index.php;
     }
 
     error_page  403 /error/403.html;
