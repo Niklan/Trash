@@ -4,3 +4,4 @@
 * [**Get route name by path**](get_route_name_by_path.md)
 * [**Get current route name**](get_current_route_name.md)
 * [**Get theme name**](get_theme_name.md) - examples how to get current active theme.
+* [**Print block programmatically**](print_block_programmatically.md) — loading block information for future processing.
