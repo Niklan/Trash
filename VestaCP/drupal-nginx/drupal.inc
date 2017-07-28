@@ -71,7 +71,7 @@ location / {
     }
 
     # All static files will be served directly.
-    location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|html|xml|otf|ttf|eot|woff2?|svg)$ {
+    location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|html|otf|ttf|eot|woff2?|svg)$ {
         access_log off;
         expires 30d;
         # No need to bleed constant updates. Send the all shebang in one
@@ -82,22 +82,6 @@ location / {
         open_file_cache_valid 45s;
         open_file_cache_min_uses 2;
         open_file_cache_errors off;
-    }
-
-    # Vesta Config for factcgi. Didn't working without it.
-    location ~ [^/]\.php(/|$) {
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        if (!-f $document_root$fastcgi_script_name) {
-            return  404;
-        }
-
-        fastcgi_pass    $backend_lsnr;
-        fastcgi_index   index.php;
-        fastcgi_param SCRIPT_FILENAME $request_filename;
-        fastcgi_intercept_errors on;
-        fastcgi_buffer_size 32k;
-        fastcgi_buffers 4 32k;
-        include         /etc/nginx/fastcgi_params;
     }
 
     # Replicate the Apache <FilesMatch> directive of Drupal standard
@@ -175,14 +159,6 @@ location ^~ /patches {
 location ~* ^.+\.php$ {
     return 404;
 }
-
-#error_page  403 try_files $uri @drupal;
-#error_page  404 try_files $uri @drupal;
-#error_page  500 502 503 504 try_files $uri @drupal;
-
-#location /error/ {
-#    alias   %home%/%user%/web/%domain%/document_errors/;
-#}
 
 location @drupal {
     rewrite ^/(.*)$ /index.php;
