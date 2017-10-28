@@ -7,3 +7,10 @@
 * [**Print block programmatically**](print_block_programmatically.md) — loading block information for future processing.
 * [**Get page title programmatically**](drupal_get_title.md)
 * [**Render image styles programmatically**](render_image_style.md)
+
+## Drupal Commerce 2
+
+Drupal Commerce specific code examples.
+
+* [**Create product variant programmatically**](drupal-commerce-create-product-variant.md)
+* [**Create product programmatically**](drupal-commerce-create-product.md)
