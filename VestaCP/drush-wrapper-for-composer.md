@@ -1,5 +1,9 @@
 # Drush wrapper for composer
 
+## Simple and elegant solution
+
+[Drush Launcher](https://github.com/drush-ops/drush-launcher)
+
 ## Global
 
 1. `touch /usr/local/bin/drush`
