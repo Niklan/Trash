@@ -7,7 +7,11 @@
 
 ~~~sh
 #!/bin/bash
-s3cmd sync --delete-removed /home/backup/*.tar s3://BUCKET/OBJECT/ --storage-class REDUCED_REDUNDANCY
+
+# Importing system variables
+source /etc/profile
+
+s3cmd sync --delete-removed /home/backup/*.tar s3://BUCKET-NAME/FOLDER/ --storage-class REDUCED_REDUNDANCY
 ~~~
 
 Move this file to `/usr/local/vesta/bin/`
@@ -19,7 +23,7 @@ chmod a+x s3backups
 
 * Add this file to cron, how often you want to upload backups to Amazon S3. For me, it doing every day at 3PM.
 
-![Cron](http://i.imgur.com/rHbfTjE.png)
+![Cron](https://i.imgur.com/TXwHl8t.png)
 
 This will backup all files in /home/backup which has .tar file extension. This file will be uploaded as 'Reduced Redundancy' files, so their price will be lower.
 
