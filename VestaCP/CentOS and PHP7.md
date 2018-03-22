@@ -11,11 +11,9 @@ First things, first. For this instruction you must have enabled REMI repositorie
 If you do so, than enable them:
 
 ~~~bash
-wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
-wget http://rpms.remirepo.net/enterprise/remi-release-7.rpm
-rpm -Uvh remi-release-7.rpm epel-release-latest-7.noarch.rpm
-# enable
-yum --enablerepo=remi update remi-release
+yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
+yum install yum-utils
 ~~~
 
 ## Install PHP 7.1
