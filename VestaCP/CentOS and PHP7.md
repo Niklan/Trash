@@ -20,7 +20,7 @@ yum install yum-utils
 
 ~~~bash
 service php-fpm stop
-yum -y --enablerepo=remi install php71-php php71-php-pear php71-php-bcmath php71-php-pecl-jsond-devel php71-php-mysqlnd php71-php-gd php71-php-common php71-php-fpm php71-php-intl php71-php-cli php71-php php71-php-xml php71-php-opcache php71-php-pecl-apcu php71-php-pecl-jsond php71-php-pdo php71-php-gmp php71-php-process php71-php-pecl-imagick php71-php-devel php71-php-mbstring
+yum -y --enablerepo=remi install php71-php php71-php-pear php71-php-bcmath php71-php-pecl-jsond-devel php71-php-mysqlnd php71-php-gd php71-php-common php71-php-fpm php71-php-intl php71-php-cli php71-php php71-php-xml php71-php-opcache php71-php-pecl-apcu php71-php-pecl-jsond php71-php-pdo php71-php-gmp php71-php-process php71-php-pecl-imagick php71-php-devel php71-php-mbstring php71-php-pecl-zip
 # Link new php to default binary
 rm -f /usr/bin/php
 ln -s /usr/bin/php71 /usr/bin/php
