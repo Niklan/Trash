@@ -29,3 +29,14 @@ P.s. I'm just beginner at nginx, so my config may be not full, so you can help m
 ```bash
 wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-ready.stpl && wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-ready.tpl &&wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-ready-http-no-www.stpl && wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-ready-http-no-www.tpl && wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-ready-https-no-www.stpl && wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-ready-https-no-www.tpl
 ```
+
+drupal-project all confings
+
+```bash
+wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-project.tpl &&
+wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-project.stpl &&
+wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-project-http-no-www.tpl &&
+wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-project-http-no-www.stpl &&
+wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-project-https-no-www.tpl &&
+wget https://raw.githubusercontent.com/Niklan/Trash/master/VestaCP/drupal-nginx/drupal-project-https-no-www.stpl
+```
