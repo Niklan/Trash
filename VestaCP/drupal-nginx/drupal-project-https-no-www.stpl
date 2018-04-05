@@ -43,7 +43,7 @@ server {
         alias   %home%/%user%/web/%domain%/document_errors/;
     }
     
-    include     /etc/nginx/conf.d/drupal.inc*;
+    include     /usr/local/vesta/data/templates/web/nginx/drupal.inc*;
 
     include     /etc/nginx/conf.d/phpmyadmin.inc*;
     include     /etc/nginx/conf.d/phppgadmin.inc*;
