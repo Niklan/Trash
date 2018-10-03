@@ -81,15 +81,27 @@ parameters:
     auto_reload: true,
     cache: true
   renderer.config:
-    required_cache_contexts: ['languages:language_interface', theme, user.permissions], auto_placeholder_conditions: { max-age: 0, contexts: [session, user], tags: {  } } }
+    required_cache_contexts: ['languages:language_interface', theme, user.permissions]
+    auto_placeholder_conditions:
+      max-age: 0
+      contexts: [session, user]
+      tags: { }
   factory.keyvalue: { }
   factory.keyvalue.expirable: { }
   filter_protocols: [http, https, ftp, news, nntp, tel, telnet, mailto, irc, ssh, sftp, webcal, rtsp]
-  cors.config: { enabled: false, allowedHeaders: {  }, allowedMethods: {  }, allowedOrigins: ['*'], exposedHeaders: false, maxAge: false, supportsCredentials: false }
+  cors.config:
+    enabled: false
+    allowedHeaders: { }
+    allowedMethods: { }
+    allowedOrigins: ['*']
+    exposedHeaders: false
+    maxAge: false
+    supportsCredentials: false
 
 services:
   cache.backend.null:
     class: Drupal\Core\Cache\NullBackendFactory
+
 ```
 
 # Semi-official way
