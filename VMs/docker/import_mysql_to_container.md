@@ -24,3 +24,10 @@ docker exec -i CONTAINER_ID mysql -uUSERNAME -pPASSWORD DATABASE_NAME < BACKUPFI
 ~~~bash
 docker exec -i a20fb38c2f2d mysql -uusername -p123qwerty main < backup.sql
 ~~~
+
+
+From .sql.gz
+
+```bash
+zcat /path/to/file.sql.gz | mysql -uusername -p123qwerty your_database
+```
