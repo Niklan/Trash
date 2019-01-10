@@ -178,3 +178,11 @@ cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
   }
 {% endif %}
 ```
+
+4. Change in your **nginx-vhosts.template** line with SSL at the end from
+
+`{% import etc/templates/default/nginx-vhosts-ssl.template %}`
+
+to
+
+`{% import etc/templates/nginx-vhosts-ssl.template %}`
