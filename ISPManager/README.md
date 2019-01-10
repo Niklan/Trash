@@ -11,7 +11,7 @@ Instruction how to configure NGINX configs to work with Drupal 7 and 8. This is 
 
 Instruction for composer installation with support alternative PHP versions.
 
-### [Drush installation](install-drush-launcher.md)
+### [Drush installation](install-drush.md)
 
 Instruction for Drush installation with support alternative PHP versions.
 
