@@ -2,7 +2,7 @@
 
 ## Common improvements
 
-# max-allowed-packet
+### max-allowed-packet
 
 Set it to `256M`.
 
