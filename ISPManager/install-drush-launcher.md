@@ -1,4 +1,4 @@
- # Drush Launcher installation for ISPManager 5
+# Drush Launcher installation for ISPManager 5
 
 Installation instruction for [Drush launcher](https://github.com/drush-ops/drush-launcher).
 
@@ -6,17 +6,19 @@ Installation instruction for [Drush launcher](https://github.com/drush-ops/drush
 # On root user.
 wget -O drush.phar https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar
 chmod +x drush.phar
-sudo mv drush.phar /usr/local/bin/drush
+sudo mv drush.phar /usr/local/bin/drush-bin
 ```
 
 ## Different PHP versions
 
-1. Create `/etc/profile.d/global_aliases.sh` if not exists.
-2. Add
+1. `touch /usr/local/bin/drush`.
+2. 
 
 ```bash
-# Don't forget to default php versions.
-alias drush="/opt/php72/bin/php /usl/local/bin/drush"
-# You can also add additional aliases for older (newer) versions.
-alias drush56="/opt/php56/bin/php /usl/local/bin/drush"
+#!/bin/bash
+/opt/php72/bin/php /usr/local/bin/drush-bin "$@"
 ```
+
+3. `chmod +x /usr/local/bin/drush`
+
+You can create as many as you want same files with different php version. F.e. /usr/local/bin/drush56 for PHP 5.6.

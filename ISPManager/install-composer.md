@@ -6,17 +6,19 @@ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php composer-setup.php
 php -r "unlink('composer-setup.php');"
 sudo chmod +x composer.phar
-sudo mv composer.phar /usr/local/bin/composer
+sudo mv composer.phar /usr/local/bin/composer-bin
 ```
 
 ## Different PHP versions
 
-1. Create `/etc/profile.d/global_aliases.sh` if not exists.
-2. Add
+1. `touch /usr/local/bin/composer`.
+2. 
 
 ```bash
-# Don't forget to default php versions.
-alias composer="/opt/php72/bin/php /usl/local/bin/composer"
-# You can also add additional aliases for older (newer) versions.
-alias composer56="/opt/php56/bin/php /usl/local/bin/composer"
+#!/bin/bash
+/opt/php72/bin/php /usr/local/bin/composer-bin "$@"
 ```
+
+3. `chmod +x /usr/local/bin/composer`
+
+You can create as many as you want same files with different php version. F.e. /usr/local/bin/composer56 for PHP 5.6.
