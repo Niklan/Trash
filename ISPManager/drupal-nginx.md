@@ -104,10 +104,10 @@ cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
       return 404;
     }
     
-		try_files $uri @drupal;
-	}
+    try_files $uri @drupal;
+  }
 
-	location = /favicon.ico {
+  location = /favicon.ico {
     log_not_found off;
     access_log off;
     access_log off;
@@ -120,61 +120,61 @@ cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
     open_file_cache_valid 45s;
     open_file_cache_min_uses 2;
     open_file_cache_errors off;
-	}
+  }
 
-	# With robotstxt module support.
-	location = /robots.txt {
-		allow all;
-		log_not_found off;
-		access_log off;
-		try_files $uri @drupal;
-	}
+  # With robotstxt module support.
+  location = /robots.txt {
+    allow all;
+    log_not_found off;
+    access_log off;
+    try_files $uri @drupal;
+  }
 
-	location = /humans.txt {
-		allow all;
-		log_not_found off;
-		access_log off;
-	}
+  location = /humans.txt {
+    allow all;
+    log_not_found off;
+    access_log off;
+  }
 
-	# XML Dynamic support
-	location ~* \.xml {
-		try_files $uri @drupal;
-	}
+  # XML Dynamic support
+  location ~* \.xml {
+    try_files $uri @drupal;
+  }
 
-	# Disallow access to .bzr, .git, .hg, .svn, .cvs directories: return
-	# 404 as not to disclose information.
-	location ^~ /.bzr {
+  # Disallow access to .bzr, .git, .hg, .svn, .cvs directories: return
+  # 404 as not to disclose information.
+  location ^~ /.bzr {
     return 404;
-	}
+  }
 
-	location ^~ /.git {
+  location ^~ /.git {
     return 404;
-	}
+  }
 
-	location ^~ /.hg {
+  location ^~ /.hg {
     return 404;
-	}
+  }
 
-	location ^~ /.svn {
+  location ^~ /.svn {
     return 404;
-	}
+  }
 
-	location ^~ /.cvs {
+  location ^~ /.cvs {
     return 404;
-	}
+  }
 
-	# Disallow access to patches directory.
-	location ^~ /patches {
+  # Disallow access to patches directory.
+  location ^~ /patches {
     return 404;
-	}
+  }
 
-	# Any other attempt to access PHP files returns a 404.
-	location ~* ^.+\.php$ {
+  # Any other attempt to access PHP files returns a 404.
+  location ~* ^.+\.php$ {
     return 404;
-	}
+  }
   
-	location @drupal {
+  location @drupal {
     rewrite ^/(.*)$ /index.php;
-	}
+  }
 {% endif %}
 ```
