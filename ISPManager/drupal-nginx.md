@@ -237,3 +237,8 @@ cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
 to
 
 `{% import etc/templates/nginx-vhosts-ssl.template %}`
+
+
+Now, visit WWW-domain, on edit form will be new checkbox. Check it and save to apply NGINX configs for Drupal.
+
+![Setting](https://i.imgur.com/w1MT0Fr.png)
