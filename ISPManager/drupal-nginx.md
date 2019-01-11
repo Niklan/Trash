@@ -1,18 +1,69 @@
-# Add NGINX template for Drupal 7, 8 in ISP Manager
+# ISPManager 5 — Drupal NGINX integration instructions
 
-1. Login as root
-2. Copy default template if not exists.
+1. `cd /usr/local/mgr5/etc/xml`
+2. `touch ispmgr_mod_drupal_nginx.xml`
+3. Put this content into it.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<mgrdata>
+  <handler name="drupal_nginx" type="xml">
+    <event name="webdomain.edit" after="yes" />
+  </handler>
+  
+  <metadata name="webdomain.edit" type="form">
+    <form>
+      <page name="domain">
+        <field name="drupal_nginx">
+          <input type="checkbox" name="drupal_nginx" />
+        </field>
+      </page>
+    </form>
+  </metadata>
+  
+  <lang name="ru">
+    <messages name="wedoman.edit">
+      <msg name="drupal_nginx">Drupal NGINX</msg>
+      <msg name="hint_drupal_nginx">Отметьте, чтобы конфигурации NGINX были оптимизированы под Drupal.</msg>
+    </messages>
+  </lang>
+  
+  <lang name="en">
+    <messages name="webdomain.edit">
+      <msg name="drupal_nginx">Drupal NGINX</msg>
+      <msg name="hint_drupal_nginx">Check for optimized Drupal NGINX config.</msg>
+    </messages>
+  </lang>
+</mgrdata>
+```
+
+4. `/usr/local/mgr5/sbin/mgrctl -m ispmgr exit` will restart panel.
+5. `cd /usr/local/mgr5/addon`
+6. `touch drupal_nginx`
+7. Put this content into it.
 
 ```bash
-cd /usr/local/mgr5/etc/templates
+#!/bin/bash
+
+if [[ "$PARAM_drupal_nginx" = "on" ]]
+  then
+    cat | sed 's|</doc>$|<params><DRUPAL_NGINX>on</DRUPAL_NGINX></params></doc>|'
+  else
+    cat | sed 's|</doc>$|<params><DRUPAL_NGINX>off</DRUPAL_NGINX></params></doc>|'
+fi
+```
+
+8. `cd /usr/local/mgr5/etc/templates`
+9. If you doesn't copy those files before or they doesn't exists, copy them:
+
+```bash
 cp default/nginx-vhosts.template ./nginx-vhosts.template
 cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
 ```
 
-3. Edit it and add config below before `location /`. Don't forget to change template name from "Drupal" tou yours.
-
+10. Edit it and add config below before `location /` in **both files**.
 ```nginx
-{% if $PRESET == Drupal %}
+{% if $DRUPAL_NGINX == on %}
   location / {
     # Very rarely should these ever be accessed outside of your lan
     location ~* \.(txt|log)$ {
@@ -179,7 +230,7 @@ cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
 {% endif %}
 ```
 
-4. Change in your **nginx-vhosts.template** line with SSL at the end from
+11. Change in your **nginx-vhosts.template** line with SSL at the end from
 
 `{% import etc/templates/default/nginx-vhosts-ssl.template %}`
 
