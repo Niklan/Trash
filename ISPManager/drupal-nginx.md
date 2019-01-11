@@ -22,7 +22,7 @@
   </metadata>
   
   <lang name="ru">
-    <messages name="wedoman.edit">
+    <messages name="webdomain.edit">
       <msg name="drupal_nginx">Drupal NGINX</msg>
       <msg name="hint_drupal_nginx">Отметьте, чтобы конфигурации NGINX были оптимизированы под Drupal.</msg>
     </messages>
