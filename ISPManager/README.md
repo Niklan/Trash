@@ -3,9 +3,9 @@
 This file contains small instruction how to prepare ISPManager 5 to use it with **Drupal**.
 
 
-### [Drupal Nginx](drupal-nginx.md)
+### [NGINX instructions](./nginx/README.md)
 
-Instruction how to configure NGINX configs to work with Drupal 7 and 8. This is for FastCGI (nginx + php-fpm) variation.
+Instructions for NGINX users.
 
 ### [Composer installation](install-composer.md)
 
