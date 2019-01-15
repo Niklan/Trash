@@ -32,8 +32,8 @@ _This can be used for multiple drush version on one server._
 You might be needing Drush 7.x for older sites. This is also possible, but better to create new command for it.
 
 1. `cd /usr/local/src`
-2. `git clone https://github.com/drush-ops/drush.git`
-3. `cd drush`
+2. `git clone https://github.com/drush-ops/drush.git drush7`
+3. `cd drush7`
 4. `git checkout 7.4.0` or whatever [version](https://github.com/drush-ops/drush/tags) you want.
 5. `ln -s /usr/local/src/drush/drush /usr/local/bin/drush7`
 6. `composer install` (must be installed)

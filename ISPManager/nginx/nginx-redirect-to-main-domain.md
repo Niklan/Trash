@@ -8,7 +8,7 @@
 server {
   listen $IP:80;
   server_name $ALIASES;
-  return 302 $scheme://example.com$request_uri;
+  return 301 $scheme://example.com$request_uri;
 }
 # HTTPS
 server {
@@ -24,7 +24,7 @@ server {
   add_header Strict-Transport-Security "max-age=31536000;";
   ssl_dhparam /etc/ssl/certs/dhparam4096.pem;
   
-  return 302 $scheme://example.com:443$request_uri;
+  return 301 $scheme://example.com:443$request_uri;
 }
 ```
 
