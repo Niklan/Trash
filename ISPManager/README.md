@@ -23,6 +23,3 @@ If you're using NVM, you might to read this. A little tip to save your time.
 
 By default MariaDB not configured for common usage, but can be tuned.
 
-### [Change WWW-domain docroot](change-www-docroot.md)
-
-This might be helpful if you want to migrate to Composer Drupal Project or vice versa.

@@ -238,6 +238,17 @@ to
 
 `{% import etc/templates/nginx-vhosts-ssl.template %}`
 
+12. `mkdir /usr/local/mgr5/etc/sql/webdomain.addon` (if not exist)
+13. `cd /usr/local/mgr5/etc/sql/webdomain.addon`
+14. `touch drupal_nginx`
+15. Edit **drupal_nginx** and add this lines:
+
+```conf
+default=off
+```
+
+16. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
+17. Restart core `killall core`
 
 Now, visit WWW-domain, on edit form will be new checkbox. Check it and save to apply NGINX configs for Drupal.
 

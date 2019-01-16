@@ -35,6 +35,6 @@ You might be needing Drush 7.x for older sites. This is also possible, but bette
 2. `git clone https://github.com/drush-ops/drush.git drush7`
 3. `cd drush7`
 4. `git checkout 7.4.0` or whatever [version](https://github.com/drush-ops/drush/tags) you want.
-5. `ln -s /usr/local/src/drush/drush /usr/local/bin/drush7`
+5. `ln -s /usr/local/src/drush7/drush /usr/local/bin/drush7`
 6. `composer install` (must be installed)
 7. `drush7 --version`
