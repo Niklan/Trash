@@ -254,31 +254,31 @@ to
 
 12. In **both** templates find
 
-```
-		location ~* ^.+\.(jpg|jpeg|gif|png|svg|js|css|mp3|ogg|mpe?g|avi|zip|gz|bz2?|rar|swf)$ {
+```nginx
+    location ~* ^.+\.(jpg|jpeg|gif|png|svg|js|css|mp3|ogg|mpe?g|avi|zip|gz|bz2?|rar|swf)$ {
 {% if $SRV_CACHE == on %}
-			expires [% $EXPIRES_VALUE %];
+      expires [% $EXPIRES_VALUE %];
 {% endif %}
 {% if $REDIRECT_TO_APACHE == on %}
-			try_files $uri $uri/ @fallback;
+      try_files $uri $uri/ @fallback;
 {% endif %}
     }
 ```
 
 and replace with
 
-```
-		location ~* ^.+\.(jpg|jpeg|gif|png|svg|js|css|mp3|ogg|mpe?g|avi|zip|gz|bz2?|rar|swf)$ {
+```nginx
+    location ~* ^.+\.(jpg|jpeg|gif|png|svg|js|css|mp3|ogg|mpe?g|avi|zip|gz|bz2?|rar|swf)$ {
 {% if $SRV_CACHE == on %}
-			expires [% $EXPIRES_VALUE %];
+      expires [% $EXPIRES_VALUE %];
 {% endif %}
 {% if $REDIRECT_TO_APACHE == on %}
-			try_files $uri $uri/ @fallback;
+      try_files $uri $uri/ @fallback;
 {% endif %}
 {% if $DRUPAL_NGINX == on %}
       try_files $uri @drupal;
 {% endif %}
-		}
+    }
 ```
 
 or manually add part for trying Drupal files. This will fix image style generation which brokes wtih ISP.
