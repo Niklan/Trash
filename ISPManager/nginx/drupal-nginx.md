@@ -64,9 +64,9 @@ cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
 10. Edit it and add config below before `location /` in **both files** ro somwhere below in `server {}` block.
 ```nginx
 {% if $DRUPAL_NGINX == on %}
-  # Uncomment it to handle 404 with Drupal. This is not recommended for peroformance
-  # but if you want beautiful 404 pages with full control. That's your choise.
-  #error_page 404 /index.php;
+  {#} Uncomment it to handle 404 with Drupal. This is not recommended for peroformance
+  {#} but if you want beautiful 404 pages with full control. That's your choise.
+  {#} error_page 404 /index.php;
 
   # Buffers definition. allows of up to 260k to be passed in memory.
   client_body_buffer_size 1m;
@@ -236,10 +236,7 @@ cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
   
   # This rewrites pages to be sent to PHP processing
   location @drupal {
-    index index.php;
-    if (!-e $request_filename) {
-      rewrite ^/(.*)$ /index.php?q=$1 last;
-    }
+    rewrite ^/(.*)$ /index.php;
   }
 {% endif %}
 ```
