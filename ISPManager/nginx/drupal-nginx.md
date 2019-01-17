@@ -61,9 +61,19 @@ cp default/nginx-vhosts.template ./nginx-vhosts.template
 cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
 ```
 
-10. Edit it and add config below before `location /` in **both files**.
+10. Edit it and add config below before `location /` in **both files** ro somwhere below in `server {}` block.
 ```nginx
 {% if $DRUPAL_NGINX == on %}
+  # Uncomment it to handle 404 with Drupal. This is not recommended for peroformance
+  # but if you want beautiful 404 pages with full control. That's your choise.
+  #error_page 404 /index.php;
+
+  # Buffers definition. allows of up to 260k to be passed in memory.
+  client_body_buffer_size 1m;
+  proxy_buffering on;
+  proxy_buffer_size 4k;
+  proxy_buffers 8 32k;
+
   location / {
     # Very rarely should these ever be accessed outside of your lan
     location ~* \.(txt|log)$ {
@@ -224,8 +234,12 @@ cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
     return 404;
   }
   
+  # This rewrites pages to be sent to PHP processing
   location @drupal {
-    rewrite ^/(.*)$ /index.php;
+    index index.php;
+    if (!-e $request_filename) {
+      rewrite ^/(.*)$ /index.php?q=$1 last;
+    }
   }
 {% endif %}
 ```
@@ -238,17 +252,48 @@ to
 
 `{% import etc/templates/nginx-vhosts-ssl.template %}`
 
-12. `mkdir /usr/local/mgr5/etc/sql/webdomain.addon` (if not exist)
-13. `cd /usr/local/mgr5/etc/sql/webdomain.addon`
-14. `touch drupal_nginx`
-15. Edit **drupal_nginx** and add this lines:
+12. In **both** templates find
+
+```
+		location ~* ^.+\.(jpg|jpeg|gif|png|svg|js|css|mp3|ogg|mpe?g|avi|zip|gz|bz2?|rar|swf)$ {
+{% if $SRV_CACHE == on %}
+			expires [% $EXPIRES_VALUE %];
+{% endif %}
+{% if $REDIRECT_TO_APACHE == on %}
+			try_files $uri $uri/ @fallback;
+{% endif %}
+    }
+```
+
+and replace with
+
+```
+		location ~* ^.+\.(jpg|jpeg|gif|png|svg|js|css|mp3|ogg|mpe?g|avi|zip|gz|bz2?|rar|swf)$ {
+{% if $SRV_CACHE == on %}
+			expires [% $EXPIRES_VALUE %];
+{% endif %}
+{% if $REDIRECT_TO_APACHE == on %}
+			try_files $uri $uri/ @fallback;
+{% endif %}
+{% if $DRUPAL_NGINX == on %}
+      try_files $uri @drupal;
+{% endif %}
+		}
+```
+
+or manually add part for trying Drupal files. This will fix image style generation which brokes wtih ISP.
+
+13. `mkdir /usr/local/mgr5/etc/sql/webdomain.addon` (if not exist)
+14. `cd /usr/local/mgr5/etc/sql/webdomain.addon`
+15. `touch drupal_nginx`
+16. Edit **drupal_nginx** and add this lines:
 
 ```conf
 default=off
 ```
 
-16. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
-17. Restart core `killall core`
+17. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
+18. Restart core `killall core`
 
 Now, visit WWW-domain, on edit form will be new checkbox. Check it and save to apply NGINX configs for Drupal.
 
