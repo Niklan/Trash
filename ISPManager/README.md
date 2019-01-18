@@ -23,3 +23,6 @@ If you're using NVM, you might to read this. A little tip to save your time.
 
 By default MariaDB not configured for common usage, but can be tuned.
 
+### [Drupal cron](drupal-cron.md)
+
+Several ways to handle Drupal cron.
