@@ -2,9 +2,10 @@
 
 This addon adds possibility to redirect all requests from aliases to main domain.
 
-1. `cd /usr/local/mgr5/etc/xml`
-2. `touch ispmgr_mod_redirect_to_main.xml`
-3. Put this content into it.
+1. Make sure you complete [addon preparation insutrction](addon-prepare.md).
+2. `cd /usr/local/mgr5/etc/xml`
+3. `touch ispmgr_mod_redirect_to_main.xml`
+4. Put this content into it.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -39,9 +40,9 @@ This addon adds possibility to redirect all requests from aliases to main domain
 </mgrdata>
 ```
 
-4. `cd /usr/local/mgr5/addon`
-5. `touch redirect_to_main`
-6. Put this content into it.
+5. `cd /usr/local/mgr5/addon`
+6. `touch redirect_to_main`
+7. Put this content into it.
 
 ```bash
 #!/bin/bash
@@ -54,15 +55,7 @@ if [[ "$PARAM_redirect_to_main" = "on" ]]
 fi
 ```
 
-7. `cd /usr/local/mgr5/etc/templates`
-8. Copy those two files **if they not exists**:
-
-```bash
-cp default/nginx-vhosts.template ./nginx-vhosts.template
-cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
-```
-
-9. Edit it and add config below before `location /` in **both files** or somwhere below in `server {}` block.
+8. Edit it and add config below before `location /` in **both files** or somwhere below in `server {}` block.
 
 ```nginx
 {% if $REDIRECT_TO_MAIN == on %}
@@ -72,24 +65,16 @@ cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
 {% endif %}
 ```
 
-10. Change in your **nginx-vhosts.template** line with SSL at the end from, **only if you just copied those two files and not done it before**
-
-`{% import etc/templates/default/nginx-vhosts-ssl.template %}`
-
-to
-
-`{% import etc/templates/nginx-vhosts-ssl.template %}`
-
-13. `mkdir /usr/local/mgr5/etc/sql/webdomain.addon` (if not exist)
-14. `cd /usr/local/mgr5/etc/sql/webdomain.addon`
-15. `touch redirect_to_main`
-16. Edit **redirect_to_main** and add this lines:
+9. `mkdir /usr/local/mgr5/etc/sql/webdomain.addon` (if not exist)
+10. `cd /usr/local/mgr5/etc/sql/webdomain.addon`
+11. `touch redirect_to_main`
+12. Edit **redirect_to_main** and add this lines:
 
 ```conf
 default=off
 ```
 
-17. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
-18. Restart core `killall core`
+13. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
+14. Restart core `killall core`
 
 Now, visit WWW-domain, on edit form will be new checkbox.

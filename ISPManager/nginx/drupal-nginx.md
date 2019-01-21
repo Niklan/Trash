@@ -1,8 +1,9 @@
 # ISPManager 5 — Drupal NGINX integration instructions
 
-1. `cd /usr/local/mgr5/etc/xml`
-2. `touch ispmgr_mod_drupal_nginx.xml`
-3. Put this content into it.
+1. Make sure you complete [addon preparation insutrction](addon-prepare.md).
+2. `cd /usr/local/mgr5/etc/xml`
+3. `touch ispmgr_mod_drupal_nginx.xml`
+4. Put this content into it.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -37,7 +38,6 @@
 </mgrdata>
 ```
 
-4. `/usr/local/mgr5/sbin/mgrctl -m ispmgr exit` will restart panel.
 5. `cd /usr/local/mgr5/addon`
 6. `touch drupal_nginx`
 7. Put this content into it.
@@ -54,14 +54,8 @@ fi
 ```
 
 8. `cd /usr/local/mgr5/etc/templates`
-9. If you doesn't copy those files before or they doesn't exists, copy them:
-
-```bash
-cp default/nginx-vhosts.template ./nginx-vhosts.template
-cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
-```
-
 10. Edit it and add config below before `location /` in **both files** ro somwhere below in `server {}` block.
+
 ```nginx
 {% if $DRUPAL_NGINX == on %}
   {#} Uncomment it to handle 404 with Drupal. This is not recommended for peroformance
@@ -241,15 +235,7 @@ cp default/nginx-vhosts-ssl.template ./nginx-vhosts-ssl.template
 {% endif %}
 ```
 
-11. Change in your **nginx-vhosts.template** line with SSL at the end from
-
-`{% import etc/templates/default/nginx-vhosts-ssl.template %}`
-
-to
-
-`{% import etc/templates/nginx-vhosts-ssl.template %}`
-
-12. In **both** templates find
+11. In **both** templates find
 
 ```nginx
     location ~* ^.+\.(jpg|jpeg|gif|png|svg|js|css|mp3|ogg|mpe?g|avi|zip|gz|bz2?|rar|swf)$ {
@@ -280,17 +266,17 @@ and replace with
 
 or manually add part for trying Drupal files. This will fix image style generation which brokes wtih ISP.
 
-13. `mkdir /usr/local/mgr5/etc/sql/webdomain.addon` (if not exist)
-14. `cd /usr/local/mgr5/etc/sql/webdomain.addon`
-15. `touch drupal_nginx`
-16. Edit **drupal_nginx** and add this lines:
+12. `mkdir /usr/local/mgr5/etc/sql/webdomain.addon` (if not exist)
+13. `cd /usr/local/mgr5/etc/sql/webdomain.addon`
+14. `touch drupal_nginx`
+15. Edit **drupal_nginx** and add this lines:
 
 ```conf
 default=off
 ```
 
-17. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
-18. Restart core `killall core`
+16. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
+17. Restart core `killall core`
 
 Now, visit WWW-domain, on edit form will be new checkbox. Check it and save to apply NGINX configs for Drupal.
 
