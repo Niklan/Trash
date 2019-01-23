@@ -22,9 +22,9 @@ You can run cron in multiple ways. This is summary of [this documentation](https
 
 Configure [Drush](install-drush.md) and use it! It's simpliest way.
 
-`export HOME=PATH_TO_SITE_ROOT; drush cron --quiet --root=$HOME`
+`export HOME=PATH_TO_SITE_ROOT; /usr/local/bin/drush cron --quiet --root=$HOME`
 
 - `PATH_TO_SITE_ROOT` - path to site root. This is essential, because cron doesn't know anything about environment variables, but Drush trying to get `$HOME` in every request. So it's mandatory. E.g. `/var/www/USERNAME/data/DOMAIN_NAME`
 - `--quiet` - for not printing any data to cron. If you wan't to send email with cron results, remove it.
 
-You can use `drush7` or other version you install by instructions to handle multiple Drupal versions and PHP versions.
+You can use `/usr/local/bin/drush7` or other version you install by instructions to handle multiple Drupal versions and PHP versions.
