@@ -55,7 +55,8 @@ if [[ "$PARAM_redirect_to_main" = "on" ]]
 fi
 ```
 
-8. Edit it and add config below before `location /` in **both files** or somwhere below in `server {}` block.
+8. `cd /usr/local/mgr5/etc/templates`
+9. Edit **nginx-vhosts.template** and **nginx-vhosts-ssl.template**, add config below before `location /` in **both files** or somwhere below in `server {}` block.
 
 ```nginx
 {% if $REDIRECT_TO_MAIN == on %}
@@ -65,16 +66,16 @@ fi
 {% endif %}
 ```
 
-9. `mkdir /usr/local/mgr5/etc/sql/webdomain.addon` (if not exist)
-10. `cd /usr/local/mgr5/etc/sql/webdomain.addon`
-11. `touch redirect_to_main`
-12. Edit **redirect_to_main** and add this lines:
+10. `mkdir /usr/local/mgr5/etc/sql/webdomain.addon` (if not exist)
+11. `cd /usr/local/mgr5/etc/sql/webdomain.addon`
+12. `touch redirect_to_main`
+13. Edit **redirect_to_main** and add this lines:
 
 ```conf
 default=off
 ```
 
-13. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
-14. Restart core `killall core`
+14. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
+15. Restart core `killall core`
 
 Now, visit WWW-domain, on edit form will be new checkbox.
