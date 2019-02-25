@@ -18,7 +18,7 @@ sudo mv drush.phar /usr/local/bin/drush-bin
 
 ```bash
 #!/bin/bash
-/opt/php72/bin/php /usr/local/bin/drush-bin "$@"
+env PATH="/opt/php73/bin:$PATH" php /usr/local/bin/drush-bin "$@"
 ```
 
 3. `chmod +x /usr/local/bin/drush`
