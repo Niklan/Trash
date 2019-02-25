@@ -16,7 +16,7 @@ sudo mv composer.phar /usr/local/bin/composer-bin
 
 ```bash
 #!/bin/bash
-/opt/php72/bin/php /usr/local/bin/composer-bin "$@"
+env PATH="/opt/php73/bin:$PATH" php /usr/local/bin/composer-bin "$@"
 ```
 
 3. `chmod +x /usr/local/bin/composer`
