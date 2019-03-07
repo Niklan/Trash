@@ -16,7 +16,7 @@ yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm
 yum install yum-utils
 ~~~
 
-## Install PHP 7.1
+## Install PHP 7.2
 
 ~~~bash
 service php-fpm stop
