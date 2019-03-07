@@ -20,35 +20,35 @@ yum install yum-utils
 
 ~~~bash
 service php-fpm stop
-yum -y --enablerepo=remi install php71-php php71-php-pear php71-php-bcmath php71-php-pecl-jsond-devel php71-php-mysqlnd php71-php-gd php71-php-common php71-php-fpm php71-php-intl php71-php-cli php71-php php71-php-xml php71-php-opcache php71-php-pecl-apcu php71-php-pecl-jsond php71-php-pdo php71-php-gmp php71-php-process php71-php-pecl-imagick php71-php-devel php71-php-mbstring php71-php-pecl-zip
+yum -y --enablerepo=remi install php72-php php72-php-pear php72-php-bcmath php72-php-pecl-jsond-devel php72-php-mysqlnd php72-php-gd php72-php-common php72-php-fpm php72-php-intl php72-php-cli php72-php php72-php-xml php72-php-opcache php72-php-pecl-apcu php72-php-pecl-jsond php72-php-pdo php72-php-gmp php72-php-process php72-php-pecl-imagick php72-php-devel php72-php-mbstring php72-php-pecl-zip
 # Link new php to default binary
 rm -f /usr/bin/php
-ln -s /usr/bin/php71 /usr/bin/php
+ln -s /usr/bin/php72 /usr/bin/php
 # Replace old PHP.ini with new one MAKE BACKUP BEFORE THAT IF YOU DO CHANGES.
 rm -f /etc/php.ini
-ln -s /etc/opt/remi/php71/php.ini /etc/php.ini
+ln -s /etc/opt/remi/php72/php.ini /etc/php.ini
 ~~~
 
 Test installation
 
 ~~~
 php -v
-PHP 7.1.2RC1 (cli) (built: Feb  2 2017 09:23:52) ( NTS )
-Copyright (c) 1997-2017 The PHP Group
-Zend Engine v3.1.0, Copyright (c) 1998-2017 Zend Technologies
-    with Zend OPcache v7.1.2RC1, Copyright (c) 1999-2017, by Zend Technologies
+PHP 7.2.16 (cli) (built: Mar  5 2019 13:10:50) ( NTS )
+Copyright (c) 1997-2018 The PHP Group
+Zend Engine v3.2.0, Copyright (c) 1998-2018 Zend Technologies
+    with Zend OPcache v7.2.16, Copyright (c) 1999-2018, by Zend Technologies
 ~~~
 
 Additional configuration
 
 ~~~bash
-sudo nano /etc/opt/remi/php71/php-fpm.conf
+sudo nano /etc/opt/remi/php72/php-fpm.conf
 # Change include line in FPM configuration group (first) to
 include=/etc/php-fpm.d/*.conf
-service php71-php-fpm start
+service php72-php-fpm start
 # Re-link old services
 rm -f /usr/lib/systemd/system/php-fpm.service
-ln -s /usr/lib/systemd/system/php71-php-fpm.service /usr/lib/systemd/system/php-fpm.service
+ln -s /usr/lib/systemd/system/php72-php-fpm.service /usr/lib/systemd/system/php-fpm.service
 systemctl daemon-reload
 service nginx restart
 ~~~
