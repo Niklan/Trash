@@ -1,16 +1,18 @@
 # MariaDB tuning in ISPManager 5
 
+Settings > Database
+
 ## Common improvements
 
 ### max-allowed-packet
 
-Set it to `256M`.
+Set it to `256M` (268435456).
 
 Default to `10M` is cause "ERROR 2006 (HY000) at line 1977: MySQL server has gone away" error. You won't be able to import big database.
 
-### query-cache-size
+### query-cache-limit and query-cache-size
 
-Set it to `128M`.
+Set it to `1M` (1048576, default) and `10M` (10485760).
 
 ### innodb-flush-log-at-trx-commit
 
