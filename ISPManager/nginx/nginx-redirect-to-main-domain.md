@@ -60,9 +60,9 @@ fi
 
 ```nginx
 {% if $REDIRECT_TO_MAIN == on %}
-	if ($http_host != {% $NAME %}) {
-    rewrite  ^(.*)$  $scheme://{% $NAME %}$1 permanent;
-  }
+    if ($http_host != {% $NAME %}) {
+        rewrite  ^(.*)$  $scheme://{% $NAME %}$1 permanent;
+    }
 {% endif %}
 ```
 
