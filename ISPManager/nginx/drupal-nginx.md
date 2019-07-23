@@ -54,7 +54,7 @@ fi
 ```
 
 8. `cd /usr/local/mgr5/etc/templates`
-10. Edit it and add config below before `location /` in **both files** ro somwhere below in `server {}` block.
+10. Edit it and add config below before `location /` in **both files** (nginx-vhosts.template and nginx-vhosts-ssl.template) ro somwhere below in `server {}` block.
 
 ```nginx
 {% if $DRUPAL_NGINX == on %}
