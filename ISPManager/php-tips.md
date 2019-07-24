@@ -9,6 +9,7 @@ Enable PHP extensions:
 - xmlreader
 - xmlwriter
 - opcache
+- bcmath (required by drupal/commerce)
 
 ### max_execution_time
 
