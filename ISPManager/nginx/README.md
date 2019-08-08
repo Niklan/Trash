@@ -4,7 +4,7 @@
 
 Instruction how to configure NGINX configs to work with Drupal 7 and 8. This is for FastCGI (nginx + php-fpm) variation.
 
-## [NGINX tips](nginx-tips.md)
+### [NGINX tips](nginx-tips.md)
 
 Some tips for NGINX which can improve your life with ISP.
 
