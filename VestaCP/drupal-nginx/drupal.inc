@@ -25,7 +25,7 @@ location / {
     location ~ ^/sites/.*/files/styles/ {
         try_files $uri @drupal;
         access_log off;
-        expires 30d;
+        expires max;
         ## No need to bleed constant updates. Send the all shebang in one
         ## fell swoop.
         tcp_nodelay off;
@@ -73,7 +73,7 @@ location / {
     # All static files will be served directly.
     location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|html|otf|ttf|eot|woff2?|svg)$ {
         access_log off;
-        expires 30d;
+        expires max;
         # No need to bleed constant updates. Send the all shebang in one
         # fell swoop.
         tcp_nodelay off;
@@ -98,7 +98,7 @@ location = /favicon.ico {
     log_not_found off;
     access_log off;
     access_log off;
-    expires 30d;
+    expires max;
     # No need to bleed constant updates. Send the all shebang in one
     # fell swoop.
     tcp_nodelay off;
