@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  nginx:
+    restart: unless-stopped
+    image: wodby/nginx:$NGINX_TAG
+    container_name: "${PROJECT_NAME}_nginx"
+    depends_on:
+      - php
+    environment:
+      NGINX_VHOST_PRESET: $NGINX_VHOST_PRESET
+    volumes:
+      - ./www:/var/www/html
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${PROJECT_NAME}_nginx_http.rule=Host(`${PROJECT_BASE_URL}`)
+      - traefik.http.routers.${PROJECT_NAME}_nginx_http.entrypoints=http
+      - traefik.http.routers.${PROJECT_NAME}_nginx_https.rule=Host(`${PROJECT_BASE_URL}`)
+      - traefik.http.routers.${PROJECT_NAME}_nginx_https.entrypoints=https
+      - traefik.http.routers.${PROJECT_NAME}_nginx_https.tls=true
+      - traefik.http.routers.${PROJECT_NAME}_nginx_https.tls.certresolver=letsencrypt
+      - traefik.http.middlewares.${PROJECT_NAME}_nginx_redirect_to_https.redirectscheme.scheme=https
+      - traefik.http.routers.${PROJECT_NAME}_nginx_http.middlewares=${PROJECT_NAME}_nginx_redirect_to_https@docker
+    networks:
+      - web
+
+networks:
+  web:
+    external: true

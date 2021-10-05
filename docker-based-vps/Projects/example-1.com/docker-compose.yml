@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  whoami:
+    restart: unless-stopped
+    image: "traefik/whoami"
+    networks:
+      - web
+    labels:
+      - traefik.enable=true
+      # HTTP router.
+      - traefik.http.routers.example_1_whoami_http.rule=Host(`example-1.com`)
+      - traefik.http.routers.example_1_whoami_http.entrypoints=http
+      # HTTPS router.
+      - traefik.http.routers.example_1_whoami_https.tls=true
+      - traefik.http.routers.example_1_whoami_https.rule=Host(`example-1.com`)
+      - traefik.http.routers.example_1_whoami_https.entrypoints=https
+      - traefik.http.routers.example_1_whoami_https.tls.certresolver=letsencrypt
+      # HTTP → HTTPS redirect.
+      - traefik.http.middlewares.whoami_redirect_to_https.redirectscheme.scheme=https
+      - traefik.http.routers.example_1_whoami_http.middlewares=whoami_redirect_to_https@docker
+
+networks:
+  web:
+    external: true

@@ -1,0 +1,16 @@
+providers:
+  docker:
+    exposedByDefault: false
+
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: example@example.com
+      storage: acme.json
+      tlsChallenge: {}
