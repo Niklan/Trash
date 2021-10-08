@@ -1,0 +1,89 @@
+version: '3'
+
+services:
+  mariadb:
+    restart: unless-stopped
+    image: wodby/mariadb:$MARIADB_TAG
+    container_name: "${PROJECT_NAME}_mariadb"
+    stop_grace_period: 30s
+    environment:
+      MYSQL_ROOT_PASSWORD: $DB_ROOT_PASSWORD
+      MYSQL_DATABASE: $DB_NAME
+      MYSQL_USER: $DB_USER
+      MYSQL_PASSWORD: $DB_PASSWORD
+    volumes:
+      - ./database:/var/lib/mysql
+    networks:
+      - project
+
+  php:
+    restart: unless-stopped
+    image: wodby/drupal-php:$PHP_TAG
+    container_name: "${PROJECT_NAME}_php"
+    environment:
+      PHP_OPCACHE_JIT_BUFFER_SIZE: 100m
+      PHP_DISPLAY_ERRORS: Off
+      PHP_EXTENSIONS_DISABLE: "sqlsrv,rdkafka,pgsql,pdo_sqlsrv,pdo_pgsql,pcov,mongodb,ldap,intl,imap,grpc,event,ds,ast,amqp"
+    volumes:
+      - ./www:/var/www/html
+    networks:
+      - project
+
+  crond:
+    restart: unless-stopped
+    image: wodby/drupal-php:$PHP_TAG
+    container_name: "${PROJECT_NAME}_crond"
+    command: sudo -E LD_PRELOAD=/usr/lib/preloadable_libiconv.so crond -f -d 0
+    environment:
+      CRONTAB: |-
+        * * * * * drush -r /var/www/html/web cron --uri=https://${PROJECT_BASE_URL}
+    networks:
+      - project
+    volumes:
+      - ./www:/var/www/html
+
+  nginx:
+    restart: unless-stopped
+    image: wodby/nginx:$NGINX_TAG
+    container_name: "${PROJECT_NAME}_nginx"
+    depends_on:
+      - php
+    environment:
+      NGINX_ERROR_LOG_LEVEL: debug
+      NGINX_BACKEND_HOST: php
+      NGINX_SERVER_ROOT: /var/www/html/web
+      NGINX_VHOST_PRESET: $NGINX_VHOST_PRESET
+    volumes:
+      - ./www:/var/www/html
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=web
+      - traefik.http.routers.${PROJECT_NAME}_nginx_http.rule=Host(`${PROJECT_BASE_URL}`)
+      - traefik.http.routers.${PROJECT_NAME}_nginx_http.entrypoints=http
+      - traefik.http.routers.${PROJECT_NAME}_nginx_https.rule=Host(`${PROJECT_BASE_URL}`)
+      - traefik.http.routers.${PROJECT_NAME}_nginx_https.entrypoints=https
+      - traefik.http.routers.${PROJECT_NAME}_nginx_https.tls=true
+      - traefik.http.routers.${PROJECT_NAME}_nginx_https.tls.certresolver=letsencrypt
+      - traefik.http.middlewares.${PROJECT_NAME}_nginx_redirect_to_https.redirectscheme.scheme=https
+      - traefik.http.routers.${PROJECT_NAME}_nginx_http.middlewares=${PROJECT_NAME}_nginx_redirect_to_https@docker
+    networks:
+      - web
+      - project
+
+  node:
+    restart: "no"
+    image: wodby/node:$NODE_TAG
+    container_name: "${PROJECT_NAME}_node"
+    working_dir: /var/www/html
+    volumes:
+      - ./www:/var/www/html
+    command: sh -c 'yarn install && yarn run compile'
+    networks:
+      - project
+
+networks:
+  web:
+    external: true
+  project:
+    external: false
+    name: "${PROJECT_NAME}_network"
