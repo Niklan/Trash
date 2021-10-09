@@ -18,11 +18,12 @@ services:
 
   php:
     restart: unless-stopped
-    image: wodby/php:$PHP_TAG
+    image: wodby/drupal-php:$PHP_TAG
     container_name: "${PROJECT_NAME}_php"
     environment:
-      PHP_REALPATH_CACHE_TTL: 3600
-      PHP_OUTPUT_BUFFERING: 16384
+      PHP_OPCACHE_JIT_BUFFER_SIZE: 30m
+      PHP_DISPLAY_ERRORS: 0
+      PHP_EXTENSIONS_DISABLE: "sqlsrv,rdkafka,pgsql,pdo_sqlsrv,pdo_pgsql,pcov,mongodb,ldap,intl,imap,grpc,event,ds,ast,amqp"
     volumes:
       - ./www:/var/www/html
     networks:
