@@ -58,14 +58,18 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=web
-      - traefik.http.routers.${PROJECT_NAME}_nginx_http.rule=Host(`${PROJECT_BASE_URL}`)
+      - traefik.http.routers.${PROJECT_NAME}_nginx_http.rule=Host(`${PROJECT_BASE_URL}`, `www.${PROJECT_BASE_URL}`)
       - traefik.http.routers.${PROJECT_NAME}_nginx_http.entrypoints=http
-      - traefik.http.routers.${PROJECT_NAME}_nginx_https.rule=Host(`${PROJECT_BASE_URL}`)
+      - traefik.http.routers.${PROJECT_NAME}_nginx_https.rule=Host(`${PROJECT_BASE_URL}`, `www.${PROJECT_BASE_URL}`)
       - traefik.http.routers.${PROJECT_NAME}_nginx_https.entrypoints=https
       - traefik.http.routers.${PROJECT_NAME}_nginx_https.tls=true
       - traefik.http.routers.${PROJECT_NAME}_nginx_https.tls.certresolver=letsencrypt
       - traefik.http.middlewares.${PROJECT_NAME}_nginx_redirect_to_https.redirectscheme.scheme=https
       - traefik.http.routers.${PROJECT_NAME}_nginx_http.middlewares=${PROJECT_NAME}_nginx_redirect_to_https@docker
+      - traefik.http.middlewares.${PROJECT_NAME}_nginx_redirect_www.redirectregex.permanent=true
+      - traefik.http.middlewares.${PROJECT_NAME}_nginx_redirect_www.redirectregex.regex=^https://www\.(.*)
+      - traefik.http.middlewares.${PROJECT_NAME}_nginx_redirect_www.redirectregex.replacement=https://$${1}
+      - traefik.http.routers.${PROJECT_NAME}_nginx_https.middlewares=${PROJECT_NAME}_nginx_redirect_www@docker
     networks:
       - web
       - project
