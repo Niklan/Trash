@@ -150,6 +150,8 @@ SCRIPT_PATH=$(realpath $(dirname "$0"));
 PROJECT_PATH="$SCRIPT_PATH/.."
 # A path to directory, where backups should be saved.
 BACKUP_DIRECTORY="$PROJECT_PATH/backups"
+# A path to directry with codebase.
+CODEBASE_DIRECTORY="$PROJECT_PATH/www"
 # A path for s3cmd tool configuration. This is used to upload to S3 compatible storages.
 S3CMD_CONFIG=$SCRIPT_PATH/.s3cfg
 # An URI for root backet for backups.
@@ -178,7 +180,13 @@ backup() {
   docker compose exec -T -e DRUSH_STRUCTURE_TABLES_LIST="$DRUSH_STRUCTURE_TABLES_LIST" php sh -c 'drush sql:dump --gzip $DRUSH_STRUCTURE_TABLES_LIST' > $BACKUP_DIRECTORY/$DATABASE_FILENAME
 
   echo "Upload database backup."
-  s3cmd -c $S3CMD_CONFIG --storage-class COLD put $BACKUP_DIRECTORY/$DATABASE_FILENAME $S3_BACKUP_URI/$DATABASE_FILENAME
+  s3cmd -c "$S3CMD_CONFIG" --storage-class COLD put "$BACKUP_DIRECTORY/$DATABASE_FILENAME" "$S3_BACKUP_URI/$DATABASE_FILENAME"
+
+  echo "Prepare a codabase archive."
+  tar -czf "$BACKUP_DIRECTORY/$CODEBASE_FILENAME" "$CODEBASE_DIRECTORY"
+
+  echo "Upload codebase backup."
+  s3cmd -c "$S3CMD_CONFIG" --storage-class COLD put "$BACKUP_DIRECTORY/$CODEBASE_FILENAME" "$S3_BACKUP_URI/$CODEBASE_FILENAME"
 
   echo "Clean up local files."
   rm -rf "$BACKUP_DIRECTORY"
@@ -190,6 +198,7 @@ while getopts "dwmy" arg; do
       S3_BACKUP_URI="$S3_BUCKET_URI/daily"
       DAY=$(date +%w)
       DATABASE_FILENAME="database-$DAY.sql.gz"
+      CODEBASE_FILENAME="codebase-$DAY.tar.gz"
       backup
       ;;
     w)
@@ -200,18 +209,21 @@ while getopts "dwmy" arg; do
       # first day of the week (remove '+1' if you want Sunday).
       WEEK=$((($(date +%-d)-1)/7+1))
       DATABASE_FILENAME="database-$WEEK.sql.gz"
+      CODEBASE_FILENAME="codebase-$WEEK.tar.gz"
       backup
       ;;
     m)
       S3_BACKUP_URI="$S3_BUCKET_URI/monthly"
       MONTH=$(date +%m)
       DATABASE_FILENAME="database-$MONTH.sql.gz"
+      CODEBASE_FILENAME="codebase-$MONTH.tar.gz"
       backup
       ;;
     y)
       S3_BACKUP_URI="$S3_BUCKET_URI/yearly"
       YEAR=$(date +%Y)
       DATABASE_FILENAME="database-$YEAR.sql.gz"
+      CODEBASE_FILENAME="codebase-$YEAR.tar.gz"
       backup
       ;;
     *)
