@@ -185,11 +185,8 @@ backup() {
 }
 
 while getopts "dwmy" arg; do
-  echo "$arg"
-  echo "IN LOOP"
   case $arg in
     d)
-      echo "test"
       S3_BACKUP_URI="$S3_BUCKET_URI/daily"
       DAY=$(date +%w)
       DATABASE_FILENAME="database-$DAY.sql.gz"
