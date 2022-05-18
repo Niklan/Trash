@@ -1,4 +1,4 @@
-# ISPManager 5 — Drupal NGINX integration instructions
+# ISPManager 6 — Drupal NGINX integration instructions
 
 1. Make sure you complete [addon preparation insutrction](addon-prepare.md).
 2. `cd /usr/local/mgr5/etc/xml`
@@ -54,155 +54,175 @@ fi
 ```
 
 8. `cd /usr/local/mgr5/etc/templates`
-10. Edit it and add config below before `location /` in **both files** (`nginx-vhosts.template` and `nginx-vhosts-ssl.template`) ro somwhere below in `server {}` block.
+9. `touch nginx-drupal.template`
+10. Put this into `nginx-drupal.template`
+
+```nginx
+{#} Uncomment it to handle 404 with Drupal. This is not recommended for peroformance
+{#} but if you want beautiful 404 pages with full control. That's your choise.
+{#} error_page 404 /index.php;
+
+# Buffers definition. allows of up to 260k to be passed in memory.
+client_body_buffer_size 1m;
+proxy_buffering on;
+proxy_buffer_size 4k;
+proxy_buffers 8 32k;
+
+location / {
+    # Very rarely should these ever be accessed outside of your lan
+    location ~* \.(txt|log)$ {
+        allow 192.168.0.0/16;
+        deny all;
+    }
+
+    # Trying to access private files directly returns a 404.
+    location ^~ /sites/default/files/private/ {
+        internal;
+    }
+
+    # For configuration storage.
+    location ^~ /sites/default/files/config_.*/ {
+        internal;
+    }
+
+    # Don't allow direct access to PHP files in the vendor directory.
+    location ~ /vendor/.*\.php$ {
+        internal;
+    }
+
+    # Fix for image style generation.
+    location ~ ^/sites/.*/files/styles/ {
+        access_log off;
+        expires max;
+        try_files $uri @drupal;
+    }
+
+    # Handle private files through Drupal.
+    location ~ ^/system/files/ {
+        try_files $uri /index.php?$query_string;
+    }
+
+    # Advanced Aggregation module CSS
+    # support. http://drupal.org/project/advagg.
+    location ^~ /sites/default/files/advagg_css/ {
+        expires max;
+        add_header ETag '';
+        add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
+        add_header Accept-Ranges '';
+        location ~* ^/sites/default/files/advagg_css/css[__[:alnum:]]+\.css$ {
+            allow all;
+            access_log off;
+            try_files $uri @drupal;
+        }
+    }
+
+    # Advanced Aggregation module JS
+    # support. http://drupal.org/project/advagg.
+    location ^~ /sites/default/files/advagg_js/ {
+        expires max;
+        add_header ETag '';
+        add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
+        add_header Accept-Ranges '';
+        location ~* ^/sites/default/files/advagg_js/js[__[:alnum:]]+\.js$ {
+            access_log off;
+            try_files $uri @drupal;
+        }
+    }
+
+    # Replicate the Apache <FilesMatch> directive of Drupal standard
+    # .htaccess. Disable access to any code files. Return a 404 to curtail
+    # information disclosure. Hide also the text files.
+    location ~* ^(?:.+\.(?:htaccess|make|txt|engine|inc|info|install|module|profile|po|pot|sh|.*sql|test|theme|tpl(?:\.php)?|xtmpl)|code-style\.pl|/Entries.*|/Repository|/Root|/Tag|/Template)$ {
+        return 404;
+    }
+
+    try_files $uri @drupal;
+}
+
+location = /favicon.ico {
+    log_not_found off;
+    access_log off;
+    access_log off;
+    expires max;
+}
+
+# With robotstxt module support.
+location = /robots.txt {
+    allow all;
+    log_not_found off;
+    access_log off;
+    try_files $uri @drupal;
+}
+
+location = /humans.txt {
+    allow all;
+    log_not_found off;
+    access_log off;
+    try_files $uri @drupal;
+}
+
+# XML Dynamic support
+location ~* \.xml {
+    try_files $uri @drupal;
+}
+
+# Disallow access to .bzr, .git, .hg, .svn, .cvs directories: return
+# 404 as not to disclose information.
+location ^~ /.bzr {
+    return 404;
+}
+
+location ^~ /.git {
+    return 404;
+}
+
+location ^~ /.hg {
+    return 404;
+}
+
+location ^~ /.svn {
+    return 404;
+}
+
+location ^~ /.cvs {
+    return 404;
+}
+
+# Disallow access to patches directory.
+location ^~ /patches {
+    return 404;
+}
+
+# Any other attempt to access PHP files returns a 404.
+location ~* ^.+\.php$ {
+    return 404;
+}
+
+# This rewrites pages to be sent to PHP processing
+location @drupal {
+    rewrite ^/(.*)$ /index.php;
+}
+```
+
+12. Edit `nginx-vhosts.template` and `nginx-vhosts-ssl.template`. Add content below before `location /` in **both files** but in `server {}` block.
 
 ```nginx
 {% if $DRUPAL_NGINX == on %}
-    {#} Uncomment it to handle 404 with Drupal. This is not recommended for peroformance
-    {#} but if you want beautiful 404 pages with full control. That's your choise.
-    {#} error_page 404 /index.php;
-
-    # Buffers definition. allows of up to 260k to be passed in memory.
-    client_body_buffer_size 1m;
-    proxy_buffering on;
-    proxy_buffer_size 4k;
-    proxy_buffers 8 32k;
-
-    location / {
-        # Very rarely should these ever be accessed outside of your lan
-        location ~* \.(txt|log)$ {
-            allow 192.168.0.0/16;
-            deny all;
-        }
-
-        # Trying to access private files directly returns a 404.
-        location ^~ /sites/default/files/private/ {
-            internal;
-        }
-
-        # For configuration storage.
-        location ^~ /sites/default/files/config_.*/ {
-            internal;
-        }
-
-        # Don't allow direct access to PHP files in the vendor directory.
-        location ~ /vendor/.*\.php$ {
-            internal;
-        }
-
-        # Fix for image style generation.
-        location ~ ^/sites/.*/files/styles/ {
-            access_log off;
-            expires max;
-            try_files $uri @drupal;
-        }
-
-        # Handle private files through Drupal.
-        location ~ ^/system/files/ {
-            try_files $uri /index.php?$query_string;
-        }
-
-        # Advanced Aggregation module CSS
-        # support. http://drupal.org/project/advagg.
-        location ^~ /sites/default/files/advagg_css/ {
-            expires max;
-            add_header ETag '';
-            add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
-            add_header Accept-Ranges '';
-            location ~* ^/sites/default/files/advagg_css/css[__[:alnum:]]+\.css$ {
-                allow all;
-                access_log off;
-                try_files $uri @drupal;
-            }
-        }
-
-        # Advanced Aggregation module JS
-        # support. http://drupal.org/project/advagg.
-        location ^~ /sites/default/files/advagg_js/ {
-            expires max;
-            add_header ETag '';
-            add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
-            add_header Accept-Ranges '';
-            location ~* ^/sites/default/files/advagg_js/js[__[:alnum:]]+\.js$ {
-                access_log off;
-                try_files $uri @drupal;
-            }
-        }
-
-        # Replicate the Apache <FilesMatch> directive of Drupal standard
-        # .htaccess. Disable access to any code files. Return a 404 to curtail
-        # information disclosure. Hide also the text files.
-        location ~* ^(?:.+\.(?:htaccess|make|txt|engine|inc|info|install|module|profile|po|pot|sh|.*sql|test|theme|tpl(?:\.php)?|xtmpl)|code-style\.pl|/Entries.*|/Repository|/Root|/Tag|/Template)$ {
-            return 404;
-        }
-    
-        try_files $uri @drupal;
-    }
-
-    location = /favicon.ico {
-        log_not_found off;
-        access_log off;
-        access_log off;
-        expires max;
-    }
-
-    # With robotstxt module support.
-    location = /robots.txt {
-        allow all;
-        log_not_found off;
-        access_log off;
-        try_files $uri @drupal;
-    }
-
-    location = /humans.txt {
-        allow all;
-        log_not_found off;
-        access_log off;
-        try_files $uri @drupal;
-    }
-
-    # XML Dynamic support
-    location ~* \.xml {
-        try_files $uri @drupal;
-    }
-
-    # Disallow access to .bzr, .git, .hg, .svn, .cvs directories: return
-    # 404 as not to disclose information.
-    location ^~ /.bzr {
-        return 404;
-    }
-
-    location ^~ /.git {
-        return 404;
-    }
-
-    location ^~ /.hg {
-        return 404;
-    }
-
-    location ^~ /.svn {
-        return 404;
-    }
-
-    location ^~ /.cvs {
-        return 404;
-    }
-
-    # Disallow access to patches directory.
-    location ^~ /patches {
-        return 404;
-    }
-
-    # Any other attempt to access PHP files returns a 404.
-    location ~* ^.+\.php$ {
-        return 404;
-    }
-  
-    # This rewrites pages to be sent to PHP processing
-    location @drupal {
-        rewrite ^/(.*)$ /index.php;
-    }
+        {% import etc/templates/nginx-drupal.template %}
 {% endif %}
+```
+**Example**:
+
+```nginx
+{% if THIS_BLOCK_FOR_REMOVE_EXPIRES %}
+        expires [% $EXPIRES_VALUE %];
+{% endif %}
+{% if $DRUPAL_NGINX == on %}
+        {% import etc/templates/nginx-drupal.template %}
+{% endif %}
+        location / {
+{% if $PHP == on %}
+                location ~ [^/]\.ph(p\d*|tml)$ {
 ```
 
 11. `mkdir /usr/local/mgr5/etc/sql/webdomain.addon` (if not exist)
