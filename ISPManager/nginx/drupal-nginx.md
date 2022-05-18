@@ -14,7 +14,7 @@
   
   <metadata name="site.edit" type="form">
     <form>
-      <page name="domain">
+      <page name="additional">
         <field name="drupal_nginx">
           <input type="checkbox" name="drupal_nginx" />
         </field>
@@ -208,14 +208,14 @@ location @drupal {
 
 ```nginx
 {% if $DRUPAL_NGINX == on %}
-        {% import etc/templates/nginx-drupal.template %}
+  {% import etc/templates/nginx-drupal.template %}
 {% endif %}
 ```
 14. Edit `nginx-vhosts-ssl.template`. Add content below before `location /` in **both files** but in `server {}` block.
 
 ```nginx
 {% if $DRUPAL_NGINX == on %}
-        {% import etc/templates/nginx-drupal-ssl.template %}
+  {% import etc/templates/nginx-drupal-ssl.template %}
 {% endif %}
 ```
 
@@ -228,8 +228,7 @@ location @drupal {
 default=off
 ```
 
-15. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
-16. Restart core `/usr/local/mgr5/sbin/mgrctl -m ispmgr exit`
+15. Restart core `/usr/local/mgr5/sbin/mgrctl -m ispmgr exit`
 
 Now, visit WWW-domain, on edit form will be new checkbox. Check it and save to apply NGINX configs for Drupal.
 
