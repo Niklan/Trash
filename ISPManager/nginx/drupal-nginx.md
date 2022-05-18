@@ -9,10 +9,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mgrdata>
   <handler name="drupal_nginx" type="xml">
-    <event name="webdomain.edit" after="yes" />
+    <event name="site.edit" after="yes" />
   </handler>
   
-  <metadata name="webdomain.edit" type="form">
+  <metadata name="site.edit" type="form">
     <form>
       <page name="domain">
         <field name="drupal_nginx">
@@ -23,14 +23,14 @@
   </metadata>
   
   <lang name="ru">
-    <messages name="webdomain.edit">
+    <messages name="site.edit">
       <msg name="drupal_nginx">Drupal NGINX</msg>
       <msg name="hint_drupal_nginx">Отметьте, чтобы конфигурации NGINX были оптимизированы под Drupal.</msg>
     </messages>
   </lang>
   
   <lang name="en">
-    <messages name="webdomain.edit">
+    <messages name="site.edit">
       <msg name="drupal_nginx">Drupal NGINX</msg>
       <msg name="hint_drupal_nginx">Check for optimized Drupal NGINX config.</msg>
     </messages>
