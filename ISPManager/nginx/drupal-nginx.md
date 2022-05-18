@@ -203,26 +203,20 @@ location @drupal {
     rewrite ^/(.*)$ /index.php;
 }
 ```
-
-12. Edit `nginx-vhosts.template` and `nginx-vhosts-ssl.template`. Add content below before `location /` in **both files** but in `server {}` block.
+12. `cp nginx-drupal.template nginx-drupal-ssl.template` because otherwise ISP thinks he going into recurrsion when used twice.
+13. Edit `nginx-vhosts.template`. Add content below before `location /` in **both files** but in `server {}` block.
 
 ```nginx
 {% if $DRUPAL_NGINX == on %}
         {% import etc/templates/nginx-drupal.template %}
 {% endif %}
 ```
-**Example**:
+14. Edit `nginx-vhosts-ssl.template`. Add content below before `location /` in **both files** but in `server {}` block.
 
 ```nginx
-{% if THIS_BLOCK_FOR_REMOVE_EXPIRES %}
-        expires [% $EXPIRES_VALUE %];
-{% endif %}
 {% if $DRUPAL_NGINX == on %}
-        {% import etc/templates/nginx-drupal.template %}
+        {% import etc/templates/nginx-drupal-ssl.template %}
 {% endif %}
-        location / {
-{% if $PHP == on %}
-                location ~ [^/]\.ph(p\d*|tml)$ {
 ```
 
 11. `mkdir /usr/local/mgr5/etc/sql/webdomain.addon` (if not exist)
