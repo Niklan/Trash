@@ -21,10 +21,9 @@ sudo mv composer.phar /usr/local/bin/composer-bin
 PHP_EXEC="/opt/php81/bin/php -c /var/www/USERNAME/data/php-bin-isp-php81"
 $PHP_EXEC "$@"
 ```
-
+5. `chmod +x ~/bin/php`
 5. Edit or create `~/.bash_profile`
-   1. **Create a new one** (default, because file doesn'e exists):
-      2. `echo "export PATH=$HOME/bin:$PATH" >> ~/.bash_profile`
+   1. **Create a new one** (default, because file doesn'e exists): `echo "export PATH=$HOME/bin:$PATH" >> ~/.bash_profile`
    7. Update `PATH` with appending `~/bin`.
 
 ## Specific PHP version for Composer for all users
