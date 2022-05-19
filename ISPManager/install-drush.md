@@ -8,7 +8,7 @@ Installation instruction for [Drush launcher](https://github.com/drush-ops/drush
 # On root user.
 wget -O drush.phar https://github.com/drush-ops/drush-launcher/releases/download/0.10.1/drush.phar
 chmod +x drush.phar
-sudo mv drush.phar /usr/local/bin/drush
+mv drush.phar /usr/local/bin/drush
 ```
 
 ### Different PHP versions
@@ -16,14 +16,14 @@ sudo mv drush.phar /usr/local/bin/drush
 E.g, for PHP 8.1.
 
 1. `touch /usr/local/bin/drush81`.
-2. 
+2. Add content:
 
 ```bash
 #!/bin/bash
 env PATH="/opt/php81/bin:$PATH" php /usr/local/bin/drush "$@"
 ```
 
-3. `chmod +x /usr/local/bin/drush`
+3. `chmod +x /usr/local/bin/drush81`
 
 You can create as many as you want same files with different php version. F.e. /usr/local/bin/drush56 for PHP 5.6.
 
