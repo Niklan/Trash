@@ -1,4 +1,4 @@
-# ISPManager 5 NGINX instructions 
+# ISPManager 6 NGINX instructions 
 
 ### [Addon: Drupal NGINX](drupal-nginx.md)
 
