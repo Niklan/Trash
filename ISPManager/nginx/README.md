@@ -15,11 +15,3 @@ Instruction how to redirect to main domain from aliases.
 ### [Change WWW-domain docroot](change-www-docroot.md)
 
 This might be helpful if you want to migrate to Composer Drupal Project or vice versa.
-
-### [Email tips](email-tips.md)
-
-If you have problem with email delivery, this may help you.
-
-### [PHP tips](php-tips.md)
-
-You need to configure PHP properly for boost Drupal performance.
