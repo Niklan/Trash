@@ -6,7 +6,7 @@ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 php composer-setup.php
 php -r "unlink('composer-setup.php');"
 sudo chmod +x composer.phar
-sudo mv composer.phar /usr/local/bin/composer-bin
+sudo mv composer.phar /usr/local/bin/composer
 ```
 
 ## Specific PHP version for Composer for specific user
@@ -28,6 +28,7 @@ $PHP_EXEC "$@"
 
 ## Specific PHP version for Composer for all users
 
+1. `mv /usr/local/bin/composer /usr/local/bin/composer-bin`
 1. `touch /usr/local/bin/composer`.
 2. E.g., for PHP 8.1.
 
