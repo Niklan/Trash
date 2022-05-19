@@ -1,4 +1,4 @@
-# Drush installation for ISPManager 5
+# Drush installation for ISPManager 6
 
 ## Drush Launcher
 
@@ -6,19 +6,21 @@ Installation instruction for [Drush launcher](https://github.com/drush-ops/drush
 
 ```bash
 # On root user.
-wget -O drush.phar https://github.com/drush-ops/drush-launcher/releases/download/0.6.0/drush.phar
+wget -O drush.phar https://github.com/drush-ops/drush-launcher/releases/download/0.10.1/drush.phar
 chmod +x drush.phar
-sudo mv drush.phar /usr/local/bin/drush-bin
+sudo mv drush.phar /usr/local/bin/drush
 ```
 
 ### Different PHP versions
 
-1. `touch /usr/local/bin/drush`.
+E.g, for PHP 8.1.
+
+1. `touch /usr/local/bin/drush81`.
 2. 
 
 ```bash
 #!/bin/bash
-env PATH="/opt/php73/bin:$PATH" php /usr/local/bin/drush-bin "$@"
+env PATH="/opt/php81/bin:$PATH" php /usr/local/bin/drush "$@"
 ```
 
 3. `chmod +x /usr/local/bin/drush`
