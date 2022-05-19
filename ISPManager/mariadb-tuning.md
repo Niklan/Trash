@@ -1,4 +1,4 @@
-# MariaDB tuning in ISPManager 5
+# MariaDB tuning in ISPManager 6
 
 Settings > Database
 
@@ -8,7 +8,7 @@ Settings > Database
 
 Set it to `256M` (268435456).
 
-Default to `10M` is cause "ERROR 2006 (HY000) at line 1977: MySQL server has gone away" error. You won't be able to import big database.
+Default to `10M` is cause "ERROR 2006 (HY000) at line 1977: MySQL server has gone away" error. You won't be able to import big database. Also this error can be get using Batch or Queue API with a big context data.
 
 ### query-cache-limit and query-cache-size
 
