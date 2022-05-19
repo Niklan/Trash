@@ -1,4 +1,4 @@
-# ISPManager 5 instructions
+# ISPManager 6 Tips & Tricks
 
 This file contains small instruction how to prepare ISPManager 5 to use it with **Drupal**.
 
