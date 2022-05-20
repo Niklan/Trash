@@ -59,9 +59,9 @@
 7. Put this into `nginx-drupal.template`
 
 ```nginx
-{#} Uncomment it to handle 404 with Drupal. This is not recommended for peroformance
-{#} but if you want beautiful 404 pages with full control. That's your choise.
-{#} error_page 404 /index.php;
+# Uncomment it to handle 404 with Drupal. This is not recommended for peroformance
+# but if you want beautiful 404 pages with full control. That's your choise.
+#error_page 404 /index.php;
 
 # Buffers definition. allows of up to 260k to be passed in memory.
 client_body_buffer_size 1m;
@@ -69,75 +69,116 @@ proxy_buffering on;
 proxy_buffer_size 4k;
 proxy_buffers 8 32k;
 
-location / {
-    # Very rarely should these ever be accessed outside of your lan
-    location ~* \.(txt|log)$ {
-        allow 192.168.0.0/16;
-        deny all;
-    }
+# Hide default Drupal headers. Worthless payload for production.
+fastcgi_hide_header 'X-Drupal-Cache';
+fastcgi_hide_header 'X-Generator';
+fastcgi_hide_header 'X-Drupal-Dynamic-Cache';
 
-    # Trying to access private files directly returns a 404.
-    location ^~ /sites/default/files/private/ {
+location / {
+    # Private files shouldn't be accessible from outside.
+    location ~* /sites/.+/files/private/ {
         internal;
     }
 
-    # For configuration storage.
-    location ^~ /sites/default/files/config_.*/ {
+    # Image styles should be processed by Drupal, not as static files.
+    location ~* /files/styles/ {
+        access_log off;
+        expires 1y;
+        try_files $uri @drupal;
+    }
+
+    location ~* /sites/.+/files/.+\.txt {
+        access_log off;
+        expires 1y;
+        tcp_nodelay off;
+        open_file_cache max=1000 inactive=30s;
+        open_file_cache_valid 30s;
+        open_file_cache_min_uses 2;
+        open_file_cache_errors off;
+    }
+
+    # drupal/advagg
+    location ~* /sites/.+/files/advagg_css/ {
+        expires max;
+        add_header ETag '';
+        add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
+        add_header Accept-Ranges '';
+        location ~* /sites/.*/files/advagg_css/.+\.css$ {
+            access_log off;
+            add_header Cache-Control "public, max-age=31536000, no-transform, immutable";
+            try_files $uri @drupal;
+        }
+    }
+
+    # drupal/advagg
+    location ~* /sites/.+/files/advagg_js/ {
+        expires max;
+        add_header ETag '';
+        add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
+        add_header Accept-Ranges '';
+        location ~* /sites/.*/files/advagg_js/.+\.js$ {
+            access_log off;
+            add_header Cache-Control "public, max-age=31536000, no-transform, immutable";
+            try_files $uri @drupal;
+        }
+    }
+
+    # drupal/hacked
+    location ~* /admin/reports/hacked/.+/diff/ {
+        try_files $uri @drupal;
+    }
+
+    # Allow dynamic XML endpoints. You need that if you have routes with '.xml' ending.
+    #location ~* ^.+\.xml {
+    #    try_files $uri @drupal;
+    #}
+
+    # Force 'sitemap.xml' to be processed by Drupal, this is not a static file for 99.99%.
+    location ~* /sitemap.xml {
+        try_files $uri @drupal;
+    }
+
+    # Do not allow to dowonload any config.
+    location ^~ /sites/.+/files/config_.*/ {
         internal;
     }
 
     # Don't allow direct access to PHP files in the vendor directory.
-    location ~ /vendor/.*\.php$ {
+    location ~ /vendor/ {
         internal;
-    }
-
-    # Fix for image style generation.
-    location ~ ^/sites/.*/files/styles/ {
-        access_log off;
-        expires max;
-        try_files $uri @drupal;
     }
 
     # Handle private files through Drupal.
     location ~ ^/system/files/ {
-        try_files $uri /index.php?$query_string;
+        try_files $uri @drupal;
     }
 
-    # Advanced Aggregation module CSS
-    # support. http://drupal.org/project/advagg.
-    location ^~ /sites/default/files/advagg_css/ {
-        expires max;
-        add_header ETag '';
-        add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
-        add_header Accept-Ranges '';
-        location ~* ^/sites/default/files/advagg_css/css[__[:alnum:]]+\.css$ {
-            allow all;
-            access_log off;
-            try_files $uri @drupal;
-        }
-    }
-
-    # Advanced Aggregation module JS
-    # support. http://drupal.org/project/advagg.
-    location ^~ /sites/default/files/advagg_js/ {
-        expires max;
-        add_header ETag '';
-        add_header Last-Modified 'Wed, 20 Jan 1988 04:20:42 GMT';
-        add_header Accept-Ranges '';
-        location ~* ^/sites/default/files/advagg_js/js[__[:alnum:]]+\.js$ {
-            access_log off;
-            try_files $uri @drupal;
-        }
-    }
-
-    # Replicate the Apache <FilesMatch> directive of Drupal standard
-    # .htaccess. Disable access to any code files. Return a 404 to curtail
-    # information disclosure. Hide also the text files.
-    location ~* \.(engine|inc|install|make|module|profile|po|sh|.*sql|theme|twig|tpl(\.php)?|xtmpl|yml)(~|\.sw[op]|\.bak|\.orig|\.save)?$|^(\.(?!well-known).*|Entries.*|Repository|Root|Tag|Template|composer\.(json|lock)|web\.config)$|^#.*#$|\.php(~|\.sw[op]|\.bak|\.orig|\.save)$ {
+    # Replica of regex from Drupals core .htaccess.
+    location ~* ^(?:.+\.(?:htaccess|make|txt|engine|inc|info|install|module|profile|po|pot|sh|.*sql|test|theme|tpl(?:\.php)?|xtmpl)|code-style\.pl|/Entries.*|/Repository|/Root|/Tag|/Template)$ {
         return 404;
     }
 
+    # Static files.
+    location ~* ^.+\.(?:css|cur|js|jpe?g|gif|htc|ico|png|xml|otf|ttf|eot|woff|woff2|svg|mp4|svgz|ogg|ogv|pdf|pptx?|zip|tgz|gz|rar|bz2|doc|xls|exe|tar|mid|midi|wav|bmp|rtf|txt|map|webp)$ {
+        access_log off;
+        tcp_nodelay off;
+        expires 1y;
+
+        add_header Pragma "cache";
+        add_header Cache-Control "public";
+
+        open_file_cache max=1000 inactive=30s;
+        open_file_cache_valid 30s;
+        open_file_cache_min_uses 2;
+        open_file_cache_errors off;
+    }
+
     try_files $uri @drupal;
+}
+
+# This rewrites pages to be sent to PHP processing
+location @drupal {
+    rewrite ^/(.*)$ /index.php;
 }
 
 location = /favicon.ico {
@@ -199,10 +240,6 @@ location ~* ^.+\.php$ {
     return 404;
 }
 
-# This rewrites pages to be sent to PHP processing
-location @drupal {
-    rewrite ^/(.*)$ /index.php;
-}
 ```
 
 8. `cp nginx-drupal.template nginx-drupal-ssl.template` because otherwise ISP thinks he going into recurrsion when used twice.
