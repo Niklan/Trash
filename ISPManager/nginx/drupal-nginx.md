@@ -2,17 +2,25 @@
 
 1. Make sure you complete [addon preparation insutrction](addon-prepare.md).
 2. `cd /usr/local/mgr5/etc/xml`
-3. `touch ispmgr_mod_drupal_nginx.xml`
+3. `touch ispmgr_mod_drupal_nginx.xml` (prefix `ispmgr_mod_` is required)
 4. Put this content into it.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <mgrdata>
-  <handler name="drupal_nginx" type="xml">
-    <event name="site.edit" after="yes" />
-  </handler>
-  
   <metadata name="site.edit" type="form">
+    <form>
+      <page name="additional">
+        <!-- Note 'site_' prefix is important for site.edit. -->
+        <field name="site_drupal_nginx">
+          <input type="checkbox" name="site_drupal_nginx" />
+        </field>
+      </page>
+    </form>
+  </metadata>
+  
+  <!-- Backward compatibility with an older form. -->
+  <metadata name="webdomain.edit" type="form">
     <form>
       <page name="additional">
         <field name="drupal_nginx">
@@ -24,6 +32,10 @@
   
   <lang name="ru">
     <messages name="site.edit">
+      <msg name="site_drupal_nginx">Drupal NGINX</msg>
+      <msg name="hint_site_drupal_nginx">Отметьте, чтобы конфигурации NGINX были оптимизированы под Drupal.</msg>
+    </messages>
+    <messages name="webdomain.edit">
       <msg name="drupal_nginx">Drupal NGINX</msg>
       <msg name="hint_drupal_nginx">Отметьте, чтобы конфигурации NGINX были оптимизированы под Drupal.</msg>
     </messages>
@@ -31,6 +43,10 @@
   
   <lang name="en">
     <messages name="site.edit">
+      <msg name="site_drupal_nginx">Drupal NGINX</msg>
+      <msg name="hint_site_drupal_nginx">Check for optimized Drupal NGINX config.</msg>
+    </messages>
+    <messages name="webdomain.edit">
       <msg name="drupal_nginx">Drupal NGINX</msg>
       <msg name="hint_drupal_nginx">Check for optimized Drupal NGINX config.</msg>
     </messages>
@@ -38,24 +54,9 @@
 </mgrdata>
 ```
 
-5. `cd /usr/local/mgr5/addon`
-6. `touch drupal_nginx`
-7. Put this content into it.
-
-```bash
-#!/bin/bash
-
-if [[ "$PARAM_drupal_nginx" = "on" ]]
-  then
-    cat | sed 's|</doc>$|<params><DRUPAL_NGINX>on</DRUPAL_NGINX></params></doc>|'
-  else
-    cat | sed 's|</doc>$|<params><DRUPAL_NGINX>off</DRUPAL_NGINX></params></doc>|'
-fi
-```
-
-8. `cd /usr/local/mgr5/etc/templates`
-9. `touch nginx-drupal.template`
-10. Put this into `nginx-drupal.template`
+5. `cd /usr/local/mgr5/etc/templates`
+6. `touch nginx-drupal.template`
+7. Put this into `nginx-drupal.template`
 
 ```nginx
 {#} Uncomment it to handle 404 with Drupal. This is not recommended for peroformance
@@ -203,15 +204,16 @@ location @drupal {
     rewrite ^/(.*)$ /index.php;
 }
 ```
-12. `cp nginx-drupal.template nginx-drupal-ssl.template` because otherwise ISP thinks he going into recurrsion when used twice.
-13. Edit `nginx-vhosts.template`. Add content below before `location /` in **both files** but in `server {}` block.
+
+8. `cp nginx-drupal.template nginx-drupal-ssl.template` because otherwise ISP thinks he going into recurrsion when used twice.
+9. Edit `nginx-vhosts.template`. Add content below before `location /` in **both files** but in `server {}` block.
 
 ```nginx
 {% if $DRUPAL_NGINX == on %}
   {% import etc/templates/nginx-drupal.template %}
 {% endif %}
 ```
-14. Edit `nginx-vhosts-ssl.template`. Add content below before `location /` in **both files** but in `server {}` block.
+10. Edit `nginx-vhosts-ssl.template`. Add content below before `location /` in **both files** but in `server {}` block.
 
 ```nginx
 {% if $DRUPAL_NGINX == on %}
@@ -228,8 +230,9 @@ location @drupal {
 default=off
 ```
 
-15. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
-16. Restart core `killall core`
+15. `/usr/local/mgr5/sbin/mgrctl -m ispmgr exit`
+16. Kill DB cache `rm -rf /usr/local/mgr5/var/.db.cache*`
+17. Restart core `killall core`
 
 
 Now, visit WWW-domain, on edit form will be new checkbox. Check it and save to apply NGINX configs for Drupal.
