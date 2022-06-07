@@ -144,7 +144,7 @@ location / {
     }
 
     # Don't allow direct access to PHP files in the vendor directory.
-    location ~ /vendor/ {
+    location ~ ^/vendor/ {
         internal;
     }
 
