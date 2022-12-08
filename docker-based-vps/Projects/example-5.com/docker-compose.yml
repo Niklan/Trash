@@ -33,7 +33,7 @@ services:
     restart: unless-stopped
     image: wodby/drupal-php:$PHP_TAG
     container_name: "${PROJECT_NAME}_crond"
-    command: sudo -E LD_PRELOAD=/usr/lib/preloadable_libiconv.so crond -f -d 0
+    command: sudo -E crond -f -d 0
     environment:
       CRONTAB: |-
         * * * * * drush -r /var/www/html/web cron --uri=https://${PROJECT_BASE_URL}
