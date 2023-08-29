@@ -81,7 +81,8 @@ location / {
     }
 
     # Image styles should be processed by Drupal, not as static files.
-    location ~* /files/styles/ {
+    # Also it supports Drupal 10.1+ new JS/CSS aggregation system.
+    location ~* /files/(css|js|styles)/ {
         access_log off;
         expires 1y;
         try_files $uri @drupal;
